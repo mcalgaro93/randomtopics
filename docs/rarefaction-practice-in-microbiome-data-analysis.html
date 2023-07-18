@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 2 Rarefaction Practice in Microbiome Data Analysis | Random Topics</title>
+  <meta name="description" content="Chapter 2 Rarefaction Practice in Microbiome Data Analysis | Random Topics" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 2 Rarefaction Practice in Microbiome Data Analysis | Random Topics" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Rarefaction Practice in Microbiome Data Analysis | Random Topics" />
+  
+  
+  
+
+<meta name="author" content="Matteo Calgaro" />
+
+
+<meta name="date" content="2023-07-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Random Topics</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> About this book</a></li>
+<li class="chapter" data-level="2" data-path="rarefaction-practice-in-microbiome-data-analysis.html"><a href="rarefaction-practice-in-microbiome-data-analysis.html"><i class="fa fa-check"></i><b>2</b> Rarefaction Practice in Microbiome Data Analysis</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="rarefaction-practice-in-microbiome-data-analysis.html"><a href="rarefaction-practice-in-microbiome-data-analysis.html#aims-of-this-chapter"><i class="fa fa-check"></i><b>2.1</b> Aims of this chapter</a></li>
+<li class="chapter" data-level="2.2" data-path="rarefaction-practice-in-microbiome-data-analysis.html"><a href="rarefaction-practice-in-microbiome-data-analysis.html#introduction-and-definitions"><i class="fa fa-check"></i><b>2.2</b> Introduction and definitions</a></li>
+<li class="chapter" data-level="2.3" data-path="rarefaction-practice-in-microbiome-data-analysis.html"><a href="rarefaction-practice-in-microbiome-data-analysis.html#rarefaction-in-practice"><i class="fa fa-check"></i><b>2.3</b> Rarefaction in practice</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="rarefaction-practice-in-microbiome-data-analysis.html"><a href="rarefaction-practice-in-microbiome-data-analysis.html#richness-index"><i class="fa fa-check"></i><b>2.3.1</b> Richness index</a></li>
+<li class="chapter" data-level="2.3.2" data-path="rarefaction-practice-in-microbiome-data-analysis.html"><a href="rarefaction-practice-in-microbiome-data-analysis.html#rarefaction-curves"><i class="fa fa-check"></i><b>2.3.2</b> Rarefaction curves</a></li>
+<li class="chapter" data-level="2.3.3" data-path="rarefaction-practice-in-microbiome-data-analysis.html"><a href="rarefaction-practice-in-microbiome-data-analysis.html#bray-curtis-dissimilarity-index"><i class="fa fa-check"></i><b>2.3.3</b> Bray-Curtis dissimilarity index</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="rarefaction-practice-in-microbiome-data-analysis.html"><a href="rarefaction-practice-in-microbiome-data-analysis.html#references"><i class="fa fa-check"></i><b>2.4</b> References</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Random Topics</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="rarefaction-practice-in-microbiome-data-analysis" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Rarefaction Practice in Microbiome Data Analysis<a href="rarefaction-practice-in-microbiome-data-analysis.html#rarefaction-practice-in-microbiome-data-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>In the last decade, there has been ongoing debate regarding the optimal approach for normalizing sequencing depth in samples analyzed using 16S rRNA gene sequencing. A highly influential paper by McMurdie and Holmes <span class="citation">(<a href="#ref-mcmurdie2014">McMurdie and Holmes, 2014</a>)</span> strongly argued against the practice of rarefying sequence counts, deeming it “inadmissible” and discouraging its utilization. Despite a rebuttal on this subject <span class="citation">(<a href="#ref-weiss2017">Weiss <em>et al.</em>, 2017</a>)</span>, which demonstrated the benefits of rarefying in certain cases, the proponents of alternative normalization method seem to have a predominant influence within the microbiome research community. Nevertheless, a recent publication by Patrick Schloss <span class="citation">(<a href="#ref-schloss2023">Schloss, 2023</a>)</span>, shows that rarefaction is the most robust approach to control for uneven sequencing effort when considered across a variety of alpha and beta diversity metrics.</p>
+<div id="aims-of-this-chapter" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> Aims of this chapter<a href="rarefaction-practice-in-microbiome-data-analysis.html#aims-of-this-chapter" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li><p>Collect some definitions and clarify the difference between the terms <em>“rarefy”</em> and <em>“rarefaction”</em>;</p></li>
+<li><p>exemplify the previous terms in alpha and beta diversity analyses;</p></li>
+<li><p>provide the code to implement rarefaction curves and to estimate rarefaction estimates of richness and Bray-Curtis dissimilarities.</p></li>
+</ul>
+</div>
+<div id="introduction-and-definitions" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Introduction and definitions<a href="rarefaction-practice-in-microbiome-data-analysis.html#introduction-and-definitions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Rarefaction in microbiome research was introduced from ecology research out of the need to address the issue of uneven sampling depth. When studying microbial communities using high-throughput sequencing techniques like 16S rRNA gene sequencing or shotgun metagenomics, the number of sequencing reads obtained from different samples can vary significantly. This uneven sampling depth can introduce biases and make it challenging to compare the diversity and abundance of microbial taxa between samples accurately.</p>
+<p>Rarefaction standardises the sampling effort across all samples and should ensure fair comparisons of diversity and abundance. By repeatedly subsampling the sequencing data to a common sequencing depth for each sample, the rarefaction method allows researchers to obtain a consistent and unbiased estimate of the microbial diversity present in each sample.</p>
+<p>Library size normalization by random subsampling without replacement is called <em>rarefying</em>. There is confusion in the literature regarding terminology, and sometimes this normalization approach is conflated with a non-parametric resampling technique, called <em>rarefaction</em>. According to <span class="citation">(<a href="#ref-mcmurdie2014">McMurdie and Holmes, 2014</a>)</span>, rarefying is most often defined by the following steps:</p>
+<ol style="list-style-type: decimal">
+<li><p>Select a minimum library size, <span class="math inline">\(N_{L,min}\)</span>. This has also been called the rarefaction level.</p></li>
+<li><p>Discard libraries (microbiome samples) that have fewer reads than <span class="math inline">\(N_{L,min}\)</span>.</p></li>
+<li><p>Subsample the remaining libraries without replacement such that they all have size <span class="math inline">\(N_{L,min}\)</span>.</p></li>
+</ol>
+<p>Let’s make a practical example in R. We start by creating a very simple count matrix with 3 taxa and 2 samples.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb1-1" tabindex="-1"></a><span class="co"># Generate a very simple count matrix where the first</span></span>
+<span id="cb1-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb1-2" tabindex="-1"></a><span class="co"># sample has half the library size of the second sample</span></span>
+<span id="cb1-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb1-3" tabindex="-1"></a>count_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">68</span>, <span class="dv">32</span>, <span class="dv">200</span>, <span class="dv">200</span>, <span class="dv">200</span>, <span class="dv">200</span>), </span>
+<span id="cb1-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb1-4" tabindex="-1"></a>    <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">2</span>)</span>
+<span id="cb1-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb1-5" tabindex="-1"></a><span class="fu">colnames</span>(count_matrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;S1&quot;</span>, <span class="st">&quot;S2&quot;</span>)</span>
+<span id="cb1-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb1-6" tabindex="-1"></a><span class="fu">rownames</span>(count_matrix) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Taxa1&quot;</span>, <span class="st">&quot;Taxa2&quot;</span>, <span class="st">&quot;Taxa3&quot;</span>)</span>
+<span id="cb1-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb1-7" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb1-8" tabindex="-1"></a>count_matrix</span></code></pre></div>
+<pre><code>##        S1  S2
+## Taxa1  68 200
+## Taxa2  32 200
+## Taxa3 200 200</code></pre>
+<p><code>S2</code> sample has a library size which is twice the library size of sample <code>S1</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb3-1" tabindex="-1"></a><span class="fu">colSums</span>(count_matrix)</span></code></pre></div>
+<pre><code>##  S1  S2 
+## 300 600</code></pre>
+<p>According to the definition, we choose <span class="math inline">\(N_{L,min} = 300\)</span> and we subsample, without replacement (random number generation seed equal to 123), the counts such that they all the samples have size <span class="math inline">\(300\)</span>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb5-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb5-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb5-2" tabindex="-1"></a>Lmin <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">colSums</span>(count_matrix))</span>
+<span id="cb5-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb5-3" tabindex="-1"></a>count_rarefy <span class="ot">&lt;-</span> <span class="fu">apply</span>(count_matrix, <span class="dv">2</span>, <span class="at">FUN =</span> <span class="cf">function</span>(smpl){</span>
+<span id="cb5-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb5-4" tabindex="-1"></a>    vec <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="fu">rownames</span>(count_matrix), <span class="at">times =</span> smpl)</span>
+<span id="cb5-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb5-5" tabindex="-1"></a>    subsampling <span class="ot">&lt;-</span> <span class="fu">sample</span>(vec, <span class="at">size =</span> Lmin, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb5-6" tabindex="-1"></a>    <span class="fu">table</span>(subsampling)</span>
+<span id="cb5-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb5-7" tabindex="-1"></a>})</span>
+<span id="cb5-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb5-8" tabindex="-1"></a>count_rarefy</span></code></pre></div>
+<pre><code>##        S1  S2
+## Taxa1  68 103
+## Taxa2  32 109
+## Taxa3 200  88</code></pre>
+<p>The resulting table is a table where the <code>S1</code> remains the same as before subsampling. Indeed, subsampling <span class="math inline">\(N_{L,min} = 300\)</span> counts from a sample with that same library size is like taking the entire sample. <code>S2</code> instead, has now a total of 300 counts divided across the three taxa.</p>
+<p>As the subsampling step is performed only once, another way to obtain the rarefied counts more easily, is to divide the counts by their library size, multiply the relative abundances by <span class="math inline">\(N_{L,min} = 300\)</span>, and round the results.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb7-1" tabindex="-1"></a>count_rarefy_simple <span class="ot">&lt;-</span> <span class="fu">apply</span>(count_matrix, <span class="dv">2</span>, <span class="at">FUN =</span> <span class="cf">function</span>(smpl){</span>
+<span id="cb7-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb7-2" tabindex="-1"></a>    rel_abundance <span class="ot">&lt;-</span> smpl<span class="sc">/</span><span class="fu">sum</span>(smpl) </span>
+<span id="cb7-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb7-3" tabindex="-1"></a>    <span class="fu">round</span>(Lmin <span class="sc">*</span> rel_abundance, <span class="at">digits =</span> <span class="dv">0</span>)</span>
+<span id="cb7-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb7-4" tabindex="-1"></a>})</span>
+<span id="cb7-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb7-5" tabindex="-1"></a>count_rarefy_simple</span></code></pre></div>
+<pre><code>##        S1  S2
+## Taxa1  68 100
+## Taxa2  32 100
+## Taxa3 200 100</code></pre>
+<p>According to <span class="citation">(<a href="#ref-schloss2023">Schloss, 2023</a>)</span>, the authors of <span class="citation">(<a href="#ref-mcmurdie2014">McMurdie and Holmes, 2014</a>)</span> were correct to state that the distinction between “rarefying” and “rarefaction” was confusing and led to their conflation. However, they poorly managed to solve the problem due to misleading sentences throughout the publication. Traditionally, repeating the subsampling step a large number of times and averaging the result is called <em>rarefaction</em>. Instead, <em>rarefying</em> or <em>subsampling</em> is rarefaction, but with a single randomization. To minimize confusion, we will use “subsampling” in place of “rarefying” through the rest of this chapter. For clarity, we will use the same definition of rarefaction of <span class="citation">(<a href="#ref-schloss2023">Schloss, 2023</a>)</span>:</p>
+<ol style="list-style-type: decimal">
+<li><p>Select a minimum library size, <span class="math inline">\(N_{L,min}\)</span>. Researchers are encouraged to report the value of <span class="math inline">\(N_{L,min}\)</span>.</p></li>
+<li><p>Discard samples that have fewer reads than <span class="math inline">\(N_{L,min}\)</span>.</p></li>
+<li><p>Subsample the remaining libraries without replacement such that they all have size <span class="math inline">\(N_{L,min}\)</span>.</p></li>
+<li><p>Compute the desired metric (<em>e.g.</em>, richness, Shannon diversity, Bray-Curtis distances) using the subsampled data.</p></li>
+<li><p>Repeat steps 3 and 4 a large number of iterations (typically 100 or 1,000). Researchers are encouraged to report the number of iterations.</p></li>
+<li><p>Compute summary statistics (<em>e.g.</em>, the mean) using the values from step 4.</p></li>
+</ol>
+</div>
+<div id="rarefaction-in-practice" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Rarefaction in practice<a href="rarefaction-practice-in-microbiome-data-analysis.html#rarefaction-in-practice" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <em>rarefaction</em>, <em>i.e.</em> repeating the subsampling step a large number of times and averaging the result, is here exemplified for Richness index and Bray-Curtis dissimilarity index.</p>
+<p>Let’s start by using an example dataset from a research published in PNAS in early 2011 <span class="citation">(<a href="#ref-caporaso2011">Caporaso <em>et al.</em>, 2011</a>)</span>. This work compared the microbial communities from 25 environmental samples and three known “mock communities” – a total of 9 sample types – at a depth averaging 3.1 million reads per sample.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb9-1" tabindex="-1"></a><span class="fu">library</span>(mia)</span>
+<span id="cb9-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb9-2" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;GlobalPatterns&quot;</span>, <span class="at">package =</span> <span class="st">&quot;mia&quot;</span>)</span>
+<span id="cb9-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb9-3" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> mia<span class="sc">::</span><span class="fu">agglomerateByRank</span>(GlobalPatterns, <span class="st">&quot;Genus&quot;</span>)</span>
+<span id="cb9-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb9-4" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> gp_genus[</span>
+<span id="cb9-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb9-5" tabindex="-1"></a>    <span class="fu">rowSums</span>(<span class="fu">assay</span>(gp_genus, <span class="st">&quot;counts&quot;</span>)) <span class="sc">&gt;</span> <span class="dv">0</span>, ]</span>
+<span id="cb9-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb9-7" tabindex="-1"></a><span class="fu">library</span>(scater)</span>
+<span id="cb9-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb9-8" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">addPerCellQC</span>(gp_genus)</span></code></pre></div>
+<p>Here we show the distribution of library sizes across samples. We have library sizes ranging from 58688 reads to 40x times more.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb10-1" tabindex="-1"></a><span class="fu">library</span>(miaViz)</span></code></pre></div>
+<pre><code>## Loading required package: ggraph</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb12-1" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">colData</span>(gp_genus)<span class="sc">$</span>sum)</span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   58688  567103 1106849 1085257 1527330 2357181</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb14-1" tabindex="-1"></a><span class="fu">plotColData</span>(<span class="at">object =</span> gp_genus, </span>
+<span id="cb14-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb14-2" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;sum&quot;</span>, <span class="at">x =</span> <span class="st">&quot;SampleType&quot;</span>, </span>
+<span id="cb14-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb14-3" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb14-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb14-4" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>))</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
+<img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" alt="Sample library sizes grouped and coloured by sample type." width="672" />
+<p class="caption">
+Figure 2.1: Sample library sizes grouped and coloured by sample type.
+</p>
+</div>
+<div id="richness-index" class="section level3 hasAnchor" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Richness index<a href="rarefaction-practice-in-microbiome-data-analysis.html#richness-index" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Richness refers to the overall count of species within a community (sample). The most basic richness index corresponds to the number of observed species (observed richness). Richness estimates remain unaffected by the abundances of individual species.</p>
+<p>To compute richness we use the <code>estimateRichness</code> function of the <code>mia</code> package.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb15-1" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> mia<span class="sc">::</span><span class="fu">estimateRichness</span>(gp_genus, </span>
+<span id="cb15-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb15-2" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, </span>
+<span id="cb15-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb15-3" tabindex="-1"></a>    <span class="at">index =</span> <span class="st">&quot;observed&quot;</span>)</span></code></pre></div>
+<p>We can inspect the observed richness distribution of each sample type:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb16-1" tabindex="-1"></a>p_r <span class="ot">&lt;-</span> <span class="fu">plotColData</span>(<span class="at">object =</span> gp_genus, </span>
+<span id="cb16-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb16-2" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;observed&quot;</span>, <span class="at">x =</span> <span class="st">&quot;SampleType&quot;</span>, </span>
+<span id="cb16-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb16-3" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb16-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb16-4" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb16-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb16-5" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Richness in raw counts&quot;</span>)</span>
+<span id="cb16-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb16-6" tabindex="-1"></a>p_r</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-8"></span>
+<img src="bookdownproj_files/figure-html/unnamed-chunk-8-1.png" alt="Richness estimates grouped and coloured by sample type." width="672" />
+<p class="caption">
+Figure 2.2: Richness estimates grouped and coloured by sample type.
+</p>
+</div>
+<p>And we can also describe the relationship between library size and richness. When the sequencing depth is enough to describe the samples we do not expect to see any particular pattern in this kind of graphical representation.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb17-1" tabindex="-1"></a><span class="fu">plotColData</span>(<span class="at">object =</span> gp_genus, </span>
+<span id="cb17-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb17-2" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">&quot;sum&quot;</span>, <span class="at">y =</span> <span class="st">&quot;observed&quot;</span>, </span>
+<span id="cb17-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb17-3" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb17-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb17-4" tabindex="-1"></a>    <span class="fu">geom_smooth</span>() <span class="sc">+</span> </span>
+<span id="cb17-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb17-5" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Library Size&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Richness&quot;</span>, </span>
+<span id="cb17-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb17-6" tabindex="-1"></a>         <span class="at">title =</span> <span class="st">&quot;Richness vs Library Size&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39;
+## and formula = &#39;y ~ x&#39;</code></pre>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-9"></span>
+<img src="bookdownproj_files/figure-html/unnamed-chunk-9-1.png" alt="Relationship between richness and library size coloured by sample type." width="672" />
+<p class="caption">
+Figure 2.3: Relationship between richness and library size coloured by sample type.
+</p>
+</div>
+<p>But all of the above plots are generated from raw data. Here we want to inspect the effect of rarefaction. For this reason we use the <code>subsampleCounts</code> function of the package <code>mia</code> to obtain subsampled counts. We repeat this process 3 times with 3 different seeds (1, 2, and 3). We store the results in three differentially named assays of the <code>TreeSummarizedExperiment</code> object: <em>rare1</em>, <em>rare2</em>, and <em>rare3</em>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-1" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> mia<span class="sc">::</span><span class="fu">subsampleCounts</span>(gp_genus, </span>
+<span id="cb19-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-2" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, </span>
+<span id="cb19-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-3" tabindex="-1"></a>    <span class="at">min_size =</span> <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum), </span>
+<span id="cb19-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-4" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">1</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb19-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-5" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb19-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-6" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;rare1&quot;</span>)</span>
+<span id="cb19-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-7" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> mia<span class="sc">::</span><span class="fu">subsampleCounts</span>(gp_genus, </span>
+<span id="cb19-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-8" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, </span>
+<span id="cb19-9"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-9" tabindex="-1"></a>    <span class="at">min_size =</span> <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum), </span>
+<span id="cb19-10"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-10" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">2</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb19-11"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-11" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb19-12"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-12" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;rare2&quot;</span>)</span>
+<span id="cb19-13"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-13" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> mia<span class="sc">::</span><span class="fu">subsampleCounts</span>(gp_genus, </span>
+<span id="cb19-14"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-14" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, </span>
+<span id="cb19-15"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-15" tabindex="-1"></a>    <span class="at">min_size =</span> <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum), </span>
+<span id="cb19-16"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-16" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">3</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb19-17"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-17" tabindex="-1"></a>    <span class="at">verbose =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb19-18"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb19-18" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;rare3&quot;</span>)</span></code></pre></div>
+<p>We compute richness for each subsampled count matrix:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb20-1" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">estimateRichness</span>(gp_genus, <span class="at">assay.type =</span> <span class="st">&quot;rare1&quot;</span>, <span class="at">name =</span> <span class="st">&quot;rich1&quot;</span>, <span class="at">index =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb20-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb20-2" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">estimateRichness</span>(gp_genus, <span class="at">assay.type =</span> <span class="st">&quot;rare2&quot;</span>, <span class="at">name =</span> <span class="st">&quot;rich2&quot;</span>, <span class="at">index =</span> <span class="st">&quot;observed&quot;</span>)</span>
+<span id="cb20-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb20-3" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">estimateRichness</span>(gp_genus, <span class="at">assay.type =</span> <span class="st">&quot;rare3&quot;</span>, <span class="at">name =</span> <span class="st">&quot;rich3&quot;</span>, <span class="at">index =</span> <span class="st">&quot;observed&quot;</span>)</span></code></pre></div>
+<p>And plot the results:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-1" tabindex="-1"></a>p_r1 <span class="ot">&lt;-</span> <span class="fu">plotColData</span>(<span class="at">object =</span> gp_genus, </span>
+<span id="cb21-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-2" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;rich1&quot;</span>, <span class="at">x =</span> <span class="st">&quot;SampleType&quot;</span>, </span>
+<span id="cb21-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-3" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb21-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-4" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb21-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-5" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Subsampled counts - seed = 1&quot;</span>, </span>
+<span id="cb21-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-6" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;N(L,min) =&quot;</span>, <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span>
+<span id="cb21-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-7" tabindex="-1"></a>p_r2 <span class="ot">&lt;-</span> <span class="fu">plotColData</span>(<span class="at">object =</span> gp_genus, </span>
+<span id="cb21-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-8" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;rich2&quot;</span>, <span class="at">x =</span> <span class="st">&quot;SampleType&quot;</span>, </span>
+<span id="cb21-9"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-9" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb21-10"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-10" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb21-11"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-11" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Subsampled counts - seed = 2&quot;</span>, </span>
+<span id="cb21-12"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-12" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;N(L,min) =&quot;</span>, <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span>
+<span id="cb21-13"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-13" tabindex="-1"></a>p_r3 <span class="ot">&lt;-</span> <span class="fu">plotColData</span>(<span class="at">object =</span> gp_genus, </span>
+<span id="cb21-14"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-14" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;rich3&quot;</span>, <span class="at">x =</span> <span class="st">&quot;SampleType&quot;</span>, </span>
+<span id="cb21-15"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-15" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb21-16"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-16" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb21-17"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-17" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Subsampled counts - seed = 3&quot;</span>, </span>
+<span id="cb21-18"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-18" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;N(L,min) =&quot;</span>, <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span>
+<span id="cb21-19"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-19" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-20" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb21-21"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-21" tabindex="-1"></a>(<span class="fu">plot_spacer</span>() <span class="sc">+</span> p_r <span class="sc">+</span> <span class="fu">plot_spacer</span>()) <span class="sc">/</span> (p_r1 <span class="sc">+</span> p_r2 <span class="sc">+</span> p_r3) <span class="sc">+</span> </span>
+<span id="cb21-22"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb21-22" tabindex="-1"></a>    <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">&quot;collect&quot;</span>) <span class="sc">+</span> <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">&quot;a&quot;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-12"></span>
+<img src="bookdownproj_files/figure-html/unnamed-chunk-12-1.png" alt="Richness estimates grouped and coloured by sample type. a) Raw data. b) subsampled counts, seed = 1. c) subsampled counts, seed = 2. d) subsampled counts, seed = 3." width="960" />
+<p class="caption">
+Figure 2.4: Richness estimates grouped and coloured by sample type. a) Raw data. b) subsampled counts, seed = 1. c) subsampled counts, seed = 2. d) subsampled counts, seed = 3.
+</p>
+</div>
+<p>The main difference in these panels are the range of the y-axis: it reaches higher values in <strong>a</strong> rather than <strong>b</strong>, <strong>c</strong>, and <strong>d</strong>. Moreover, while the richest samples belonged to Freshwater (creek) when the richness was evaluated using raw counts (panel <strong>a</strong>), Sediment (estuary) samples became the richest when the subsampled counts were used instead (<strong>b</strong>, <strong>c</strong>, and <strong>d</strong> panels). This is probably due to the differential presence of rare taxa between the two environments. Minor differences are observable when comparing <strong>b</strong>, <strong>c</strong>, and <strong>d</strong> panels, but still they are present.</p>
+<p>Practically, rarefaction consists in averaging the index measures of panels <strong>b</strong>, <strong>c</strong>, and <strong>d</strong> to obtain a single value for each sample.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-1" tabindex="-1"></a>gp_genus<span class="sc">$</span>rich_rarefaction <span class="ot">&lt;-</span> <span class="fu">rowMeans</span>(</span>
+<span id="cb22-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-2" tabindex="-1"></a>    <span class="fu">as.data.frame</span>(<span class="fu">colData</span>(gp_genus)[, </span>
+<span id="cb22-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-3" tabindex="-1"></a>        <span class="fu">c</span>(<span class="st">&quot;rich1&quot;</span>, <span class="st">&quot;rich2&quot;</span>, <span class="st">&quot;rich3&quot;</span>)]))</span>
+<span id="cb22-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-4" tabindex="-1"></a>p_rarefaction <span class="ot">&lt;-</span> <span class="fu">plotColData</span>(<span class="at">object =</span> gp_genus, </span>
+<span id="cb22-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-5" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;rich_rarefaction&quot;</span>, <span class="at">x =</span> <span class="st">&quot;SampleType&quot;</span>, </span>
+<span id="cb22-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-6" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb22-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-7" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb22-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-8" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Rarefaction Richness&quot;</span>, </span>
+<span id="cb22-9"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-9" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;Subsamplings = 3, N(L,min) =&quot;</span>, </span>
+<span id="cb22-10"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-10" tabindex="-1"></a>            <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span>
+<span id="cb22-11"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb22-11" tabindex="-1"></a>p_rarefaction</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-13"></span>
+<img src="bookdownproj_files/figure-html/unnamed-chunk-13-1.png" alt="Richness estimates grouped and coloured by sample type. Richness indexes were averaged across the 3 subsamplings to obtain a single value for each sample." width="672" />
+<p class="caption">
+Figure 2.5: Richness estimates grouped and coloured by sample type. Richness indexes were averaged across the 3 subsamplings to obtain a single value for each sample.
+</p>
+</div>
+<p>To automatise the entire procedure the following function can be used:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-1" tabindex="-1"></a><span class="fu">library</span>(BiocParallel)</span>
+<span id="cb23-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-2" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-3" tabindex="-1"></a>rarefaction_richness <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb23-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-4" tabindex="-1"></a>    tse, <span class="co"># The object to use</span></span>
+<span id="cb23-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-5" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, <span class="co"># Assay to use</span></span>
+<span id="cb23-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-6" tabindex="-1"></a>    <span class="at">subsamplings =</span> <span class="dv">100</span>, <span class="co"># Number of subsamplings</span></span>
+<span id="cb23-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-7" tabindex="-1"></a>    <span class="at">minLibSize =</span> <span class="cn">NULL</span>, <span class="co"># The desired library size </span></span>
+<span id="cb23-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-8" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">123</span>, <span class="co"># The seed</span></span>
+<span id="cb23-9"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-9" tabindex="-1"></a>    <span class="at">BPPARAM =</span> <span class="fu">SerialParam</span>()){ <span class="co"># Parallelisation</span></span>
+<span id="cb23-10"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-10" tabindex="-1"></a>    </span>
+<span id="cb23-11"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-11" tabindex="-1"></a>    counts <span class="ot">&lt;-</span> <span class="fu">assay</span>(tse, <span class="st">&quot;counts&quot;</span>)</span>
+<span id="cb23-12"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-12" tabindex="-1"></a>    </span>
+<span id="cb23-13"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-13" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(minLibSize))</span>
+<span id="cb23-14"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-14" tabindex="-1"></a>        minLibSize <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">colSums</span>(counts))</span>
+<span id="cb23-15"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-15" tabindex="-1"></a>    </span>
+<span id="cb23-16"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-16" tabindex="-1"></a>    richness_list <span class="ot">&lt;-</span> <span class="fu">bplapply</span>(</span>
+<span id="cb23-17"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-17" tabindex="-1"></a>        <span class="at">X =</span> <span class="dv">1</span><span class="sc">:</span>subsamplings, </span>
+<span id="cb23-18"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-18" tabindex="-1"></a>        <span class="at">BPPARAM =</span> BPPARAM, </span>
+<span id="cb23-19"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-19" tabindex="-1"></a>        <span class="at">BPOPTIONS =</span> <span class="fu">bpoptions</span>(<span class="at">RNGseed =</span> seed), </span>
+<span id="cb23-20"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-20" tabindex="-1"></a>        <span class="at">FUN =</span> <span class="cf">function</span>(sub){</span>
+<span id="cb23-21"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-21" tabindex="-1"></a>            <span class="co"># Subsampling step</span></span>
+<span id="cb23-22"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-22" tabindex="-1"></a>            tse <span class="ot">&lt;-</span> mia<span class="sc">::</span><span class="fu">subsampleCounts</span>(tse, </span>
+<span id="cb23-23"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-23" tabindex="-1"></a>                <span class="at">assay.type =</span> assay.type, </span>
+<span id="cb23-24"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-24" tabindex="-1"></a>                <span class="at">min_size =</span> minLibSize,</span>
+<span id="cb23-25"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-25" tabindex="-1"></a>                <span class="co"># seed = runif(1, 0, .Machine$integer.max), </span></span>
+<span id="cb23-26"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-26" tabindex="-1"></a>                <span class="at">replace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb23-27"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-27" tabindex="-1"></a>                <span class="at">verbose =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb23-28"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-28" tabindex="-1"></a>                <span class="at">name =</span> <span class="st">&quot;sub&quot;</span>)</span>
+<span id="cb23-29"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-29" tabindex="-1"></a>            <span class="co"># Estimation step</span></span>
+<span id="cb23-30"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-30" tabindex="-1"></a>            richness <span class="ot">&lt;-</span> mia<span class="sc">::</span><span class="fu">estimateRichness</span>(tse, </span>
+<span id="cb23-31"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-31" tabindex="-1"></a>                <span class="at">assay.type =</span> <span class="st">&quot;sub&quot;</span>, </span>
+<span id="cb23-32"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-32" tabindex="-1"></a>                <span class="at">index =</span> <span class="st">&quot;observed&quot;</span>, </span>
+<span id="cb23-33"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-33" tabindex="-1"></a>                <span class="at">name =</span> <span class="st">&quot;richness&quot;</span>)<span class="sc">$</span>richness</span>
+<span id="cb23-34"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-34" tabindex="-1"></a>            <span class="fu">return</span>(richness)</span>
+<span id="cb23-35"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-35" tabindex="-1"></a>    })</span>
+<span id="cb23-36"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-36" tabindex="-1"></a>    <span class="co"># Return the averaged values</span></span>
+<span id="cb23-37"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-37" tabindex="-1"></a>    <span class="fu">colMeans</span>(plyr<span class="sc">::</span><span class="fu">ldply</span>(richness_list))</span>
+<span id="cb23-38"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb23-38" tabindex="-1"></a>}</span></code></pre></div>
+<p>We run it in parallel (Linux or MacOS, Windows users should use <code>BPPARAM = SerialParam()</code>) and we directly store the computed values inside the <code>TreeSummarizedExperiment</code> object.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb24-1" tabindex="-1"></a>gp_genus<span class="sc">$</span>rarefaction_richness <span class="ot">&lt;-</span> <span class="fu">rarefaction_richness</span>(</span>
+<span id="cb24-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb24-2" tabindex="-1"></a>    <span class="at">tse =</span> gp_genus, </span>
+<span id="cb24-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb24-3" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, </span>
+<span id="cb24-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb24-4" tabindex="-1"></a>    <span class="at">subsamplings =</span> <span class="dv">100</span>, </span>
+<span id="cb24-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb24-5" tabindex="-1"></a>    <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="dv">4</span>), </span>
+<span id="cb24-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb24-6" tabindex="-1"></a>    <span class="at">minLibSize =</span> <span class="cn">NULL</span>, </span>
+<span id="cb24-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb24-7" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">123</span>)</span></code></pre></div>
+<p>Finally, the graphical representation of rarefied richness (seed = 123, number of subsamplings = 100, <span class="math inline">\(N_{L,min} = 58688\)</span>) is reported below.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb25-1" tabindex="-1"></a>p_rarefaction100 <span class="ot">&lt;-</span> <span class="fu">plotColData</span>(<span class="at">object =</span> gp_genus, </span>
+<span id="cb25-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb25-2" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">&quot;rarefaction_richness&quot;</span>, <span class="at">x =</span> <span class="st">&quot;SampleType&quot;</span>, </span>
+<span id="cb25-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb25-3" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb25-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb25-4" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb25-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb25-5" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Rarefaction Richness&quot;</span>, </span>
+<span id="cb25-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb25-6" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;Seed = 123, Subsamplings = 100, N(L,min) =&quot;</span>, </span>
+<span id="cb25-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb25-7" tabindex="-1"></a>            <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span>
+<span id="cb25-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb25-8" tabindex="-1"></a>p_rarefaction100</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-16"></span>
+<img src="bookdownproj_files/figure-html/unnamed-chunk-16-1.png" alt="Richness estimates grouped and coloured by sample type. Richness indexes were averaged across 100 subsamplings (rarefaction library size = 58688) to obtain a single value for each sample (seed = 123)." width="672" />
+<p class="caption">
+Figure 2.6: Richness estimates grouped and coloured by sample type. Richness indexes were averaged across 100 subsamplings (rarefaction library size = 58688) to obtain a single value for each sample (seed = 123).
+</p>
+</div>
+</div>
+<div id="rarefaction-curves" class="section level3 hasAnchor" number="2.3.2">
+<h3><span class="header-section-number">2.3.2</span> Rarefaction curves<a href="rarefaction-practice-in-microbiome-data-analysis.html#rarefaction-curves" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>One of the most informative application that involves rarefaction and microbial richness is the creation of rarefaction curves:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb26-1" tabindex="-1"></a><span class="co"># devtools::install_github(&quot;gauravsk/ranacapa&quot;)</span></span>
+<span id="cb26-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb26-2" tabindex="-1"></a><span class="fu">library</span>(ranacapa)</span>
+<span id="cb26-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb26-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb26-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb26-4" tabindex="-1"></a>rarefaction_curves <span class="ot">&lt;-</span> <span class="fu">ggrare</span>(</span>
+<span id="cb26-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb26-5" tabindex="-1"></a>    mia<span class="sc">::</span><span class="fu">makePhyloseqFromTreeSE</span>(gp_genus), </span>
+<span id="cb26-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb26-6" tabindex="-1"></a>    <span class="at">step =</span> <span class="dv">10000</span>, <span class="at">plot =</span> <span class="cn">FALSE</span>, <span class="at">parallel =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb27-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-2" tabindex="-1"></a><span class="co"># https://rdrr.io/github/LTLA/scater/src/R/plot_colours.R</span></span>
+<span id="cb27-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-3" tabindex="-1"></a>total_colors <span class="ot">&lt;-</span> scater<span class="sc">:::</span><span class="fu">.get_palette</span>(<span class="st">&quot;tableau10medium&quot;</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">9</span>]</span>
+<span id="cb27-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-4" tabindex="-1"></a><span class="fu">names</span>(total_colors) <span class="ot">&lt;-</span> <span class="fu">levels</span>(gp_genus<span class="sc">$</span>SampleType)</span>
+<span id="cb27-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-5" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-6" tabindex="-1"></a><span class="fu">print</span>(rarefaction_curves) <span class="sc">+</span> </span>
+<span id="cb27-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-7" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">color =</span> SampleType)) <span class="sc">+</span> </span>
+<span id="cb27-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-8" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span> SampleType, <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
+<span id="cb27-9"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-9" tabindex="-1"></a>    <span class="fu">scale_color_manual</span>(<span class="at">values =</span> total_colors) <span class="sc">+</span></span>
+<span id="cb27-10"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-10" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">45</span>, <span class="at">hjust =</span> <span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb27-11"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-11" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Rarefaction curves&quot;</span>,</span>
+<span id="cb27-12"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb27-12" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="st">&quot;Faceted by sample type&quot;</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-18-1"></span>
+<img src="bookdownproj_files/figure-html/unnamed-chunk-18-1.png" alt="Rarefaction curves." width="672" />
+<p class="caption">
+Figure 2.7: Rarefaction curves.
+</p>
+</div>
+<div class="figure"><span style="display:block;" id="fig:unnamed-chunk-18-2"></span>
+<img src="bookdownproj_files/figure-html/unnamed-chunk-18-2.png" alt="Rarefaction curves." width="672" />
+<p class="caption">
+Figure 2.8: Rarefaction curves.
+</p>
+</div>
+<p>In this case the process of rarefaction consists in repeatedly subsampling the sequencing data at different depths, typically starting from the smallest number of reads in any sample to the largest. At each subsampling depth, the number of observed taxa is calculated (<em>i.e.</em>, richness), and these values are plotted against the corresponding sequencing depth. The resulting curve shows how the diversity of the microbial community changes as the sequencing depth increases.</p>
+<p>The importance of rarefaction curves lies in several key aspects:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>Assessing data completeness</strong>. If the curves reach a plateau, it suggests that the sequencing depth is sufficient to capture most of the diversity in the sample. On the other hand, if the curves do not plateau (<em>e.g.</em>, one tongue sample, and all Sediment (estuary) samples), it indicates that more sequencing effort is needed to adequately characterize the microbial diversity.</p></li>
+<li><p><strong>Fair comparison</strong>. Rarefaction curves enable fair comparisons of diversity across different samples with varying sequencing depths. By subsampling all samples to the same sequencing depth, the curves provide a standardized view of the community’s diversity, facilitating reliable comparisons.</p></li>
+<li><p><strong>Assessing quality</strong>. Rarefaction curves can help identify samples with low sequencing depth that might require additional attention or potentially be excluded from further analysis due to insufficient data.</p></li>
+<li><p><strong>Study design optimization</strong>. Researchers can use rarefaction curves during the study design phase to estimate the required sequencing depth for reliable and comprehensive community profiling. This information can help optimize cost-effectiveness and resource allocation.</p></li>
+</ol>
+</div>
+<div id="bray-curtis-dissimilarity-index" class="section level3 hasAnchor" number="2.3.3">
+<h3><span class="header-section-number">2.3.3</span> Bray-Curtis dissimilarity index<a href="rarefaction-practice-in-microbiome-data-analysis.html#bray-curtis-dissimilarity-index" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Similarly to what we did for microbial richness, we can also study the effect of rarefaction on beta-diversity. In particular, we will focus on the Bray-Curtis dissimilarity index, a widely used metric to quantify the dissimilarity or similarity between two ecological samples, typically used in the context of community ecology and biodiversity studies.</p>
+<p>Here we start by computing the Bray-Curtis indexes on raw counts, relative abundances (Total Sum Scaling normalization), and some subsamplings (the same used earlier for richness). Then use Multi Dimensional Scaling unsupervised ordination method is used to visualize the results.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-1" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">transformCounts</span>(gp_genus, </span>
+<span id="cb28-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-2" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, <span class="at">method =</span> <span class="st">&quot;relabundance&quot;</span>)</span>
+<span id="cb28-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-3" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-4" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">runMDS</span>(gp_genus,</span>
+<span id="cb28-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-5" tabindex="-1"></a>    <span class="at">FUN =</span> vegan<span class="sc">::</span>vegdist,</span>
+<span id="cb28-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-6" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>,</span>
+<span id="cb28-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-7" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;PCoA_BC_raw&quot;</span>,</span>
+<span id="cb28-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-8" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>)</span>
+<span id="cb28-9"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-9" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-10" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">runMDS</span>(gp_genus,</span>
+<span id="cb28-11"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-11" tabindex="-1"></a>    <span class="at">FUN =</span> vegan<span class="sc">::</span>vegdist,</span>
+<span id="cb28-12"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-12" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>,</span>
+<span id="cb28-13"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-13" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;PCoA_BC_TSS&quot;</span>,</span>
+<span id="cb28-14"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-14" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;relabundance&quot;</span>)</span>
+<span id="cb28-15"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-15" tabindex="-1"></a></span>
+<span id="cb28-16"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-16" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">runMDS</span>(gp_genus,</span>
+<span id="cb28-17"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-17" tabindex="-1"></a>    <span class="at">FUN =</span> vegan<span class="sc">::</span>vegdist,</span>
+<span id="cb28-18"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-18" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>,</span>
+<span id="cb28-19"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-19" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;PCoA_BC1&quot;</span>,</span>
+<span id="cb28-20"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-20" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;rare1&quot;</span>)</span>
+<span id="cb28-21"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-21" tabindex="-1"></a></span>
+<span id="cb28-22"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-22" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">runMDS</span>(gp_genus,</span>
+<span id="cb28-23"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-23" tabindex="-1"></a>    <span class="at">FUN =</span> vegan<span class="sc">::</span>vegdist,</span>
+<span id="cb28-24"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-24" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>,</span>
+<span id="cb28-25"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-25" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;PCoA_BC2&quot;</span>,</span>
+<span id="cb28-26"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-26" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;rare2&quot;</span>)</span>
+<span id="cb28-27"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-27" tabindex="-1"></a></span>
+<span id="cb28-28"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-28" tabindex="-1"></a>gp_genus <span class="ot">&lt;-</span> <span class="fu">runMDS</span>(gp_genus,</span>
+<span id="cb28-29"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-29" tabindex="-1"></a>    <span class="at">FUN =</span> vegan<span class="sc">::</span>vegdist,</span>
+<span id="cb28-30"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-30" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>,</span>
+<span id="cb28-31"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-31" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">&quot;PCoA_BC3&quot;</span>,</span>
+<span id="cb28-32"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-32" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;rare3&quot;</span>)</span>
+<span id="cb28-33"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-33" tabindex="-1"></a></span>
+<span id="cb28-34"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-34" tabindex="-1"></a>p_bc_raw <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BC_raw&quot;</span>, </span>
+<span id="cb28-35"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-35" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb28-36"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-36" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Raw counts, Bray-Curtis, PCoA&quot;</span>)</span>
+<span id="cb28-37"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-37" tabindex="-1"></a>p_bc_tss <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BC_TSS&quot;</span>, </span>
+<span id="cb28-38"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-38" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb28-39"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-39" tabindex="-1"></a>    <span class="fu">scale_y_reverse</span>()  <span class="sc">+</span> </span>
+<span id="cb28-40"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-40" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;TSS, Bray-Curtis, PCoA&quot;</span>)</span>
+<span id="cb28-41"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-41" tabindex="-1"></a>p_bc_r1 <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BC1&quot;</span>, </span>
+<span id="cb28-42"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-42" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>)  <span class="sc">+</span> </span>
+<span id="cb28-43"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-43" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Subsampled seed = 1, Bray-Curtis, PCoA&quot;</span>,</span>
+<span id="cb28-44"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-44" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;N(L,min) =&quot;</span>, <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span>
+<span id="cb28-45"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-45" tabindex="-1"></a>p_bc_r2 <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BC2&quot;</span>, </span>
+<span id="cb28-46"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-46" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb28-47"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-47" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Subsampled seed = 2, Bray-Curtis, PCoA&quot;</span>,</span>
+<span id="cb28-48"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-48" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;N(L,min) =&quot;</span>, <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span>
+<span id="cb28-49"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-49" tabindex="-1"></a>p_bc_r3 <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BC3&quot;</span>, </span>
+<span id="cb28-50"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-50" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb28-51"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-51" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Subsampled seed = 3, Bray-Curtis, PCoA&quot;</span>,</span>
+<span id="cb28-52"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-52" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;N(L,min) =&quot;</span>, <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span>
+<span id="cb28-53"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-53" tabindex="-1"></a></span>
+<span id="cb28-54"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-54" tabindex="-1"></a>(p_bc_raw <span class="sc">+</span> p_bc_tss <span class="sc">+</span> <span class="fu">plot_spacer</span>()) <span class="sc">/</span> </span>
+<span id="cb28-55"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-55" tabindex="-1"></a>    (p_bc_r1 <span class="sc">+</span> p_bc_r2 <span class="sc">+</span> p_bc_r3) <span class="sc">+</span> </span>
+<span id="cb28-56"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-56" tabindex="-1"></a>    <span class="fu">plot_layout</span>(<span class="at">guides =</span> <span class="st">&quot;collect&quot;</span>) <span class="sc">+</span></span>
+<span id="cb28-57"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb28-57" tabindex="-1"></a>    <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">&quot;a&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-19-1.png" width="960" /></p>
+<p>The main difference in these panels is only between <strong>a</strong> and all the others which are quite similar. That’s because in this case the total sum scaling normalization (panel <strong>b</strong>) behave similarly to using subsampling at the fixed library size of <span class="math inline">\(N_{L,min}=58688\)</span> (panels <strong>c</strong>, <strong>d</strong>, and <strong>e</strong>).</p>
+<p>The Bray-Curtis dissimilarity between two samples is computed following the formula:</p>
+<p><span class="math display">\[
+BC_{jk} = \frac{\sum_i|x_{ij}-x_{ik}|}{\sum_ix_{ij}+x_{ik}}
+\]</span></p>
+<p>where <span class="math inline">\(i\)</span> is the number of taxa and <span class="math inline">\(j,k\)</span> are the sample indexes. By construction, when a sample has 10x more counts than the other, the numerator could be inflated just for this reason and not because of a real difference between the samples.</p>
+<p>Practically, rarefaction consists in averaging the index measures of panels <strong>b</strong>, <strong>c</strong>, and <strong>d</strong> to obtain a single value for each sample.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-1" tabindex="-1"></a><span class="co"># Recompute the distances</span></span>
+<span id="cb29-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-2" tabindex="-1"></a>bc1 <span class="ot">&lt;-</span> vegan<span class="sc">::</span><span class="fu">vegdist</span>(<span class="at">x =</span> <span class="fu">t</span>(<span class="fu">assay</span>(gp_genus, <span class="st">&quot;rare1&quot;</span>)), </span>
+<span id="cb29-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-3" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>)</span>
+<span id="cb29-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-4" tabindex="-1"></a>bc2 <span class="ot">&lt;-</span> vegan<span class="sc">::</span><span class="fu">vegdist</span>(<span class="at">x =</span> <span class="fu">t</span>(<span class="fu">assay</span>(gp_genus, <span class="st">&quot;rare2&quot;</span>)), </span>
+<span id="cb29-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-5" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>)</span>
+<span id="cb29-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-6" tabindex="-1"></a>bc3 <span class="ot">&lt;-</span> vegan<span class="sc">::</span><span class="fu">vegdist</span>(<span class="at">x =</span> <span class="fu">t</span>(<span class="fu">assay</span>(gp_genus, <span class="st">&quot;rare3&quot;</span>)), </span>
+<span id="cb29-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-7" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>)</span>
+<span id="cb29-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-8" tabindex="-1"></a></span>
+<span id="cb29-9"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-9" tabindex="-1"></a><span class="co"># Average the distances across subsamplings</span></span>
+<span id="cb29-10"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-10" tabindex="-1"></a>bc_rarefaction <span class="ot">&lt;-</span> (bc1 <span class="sc">+</span> bc2 <span class="sc">+</span> bc3) <span class="sc">/</span> <span class="dv">3</span></span>
+<span id="cb29-11"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-11" tabindex="-1"></a></span>
+<span id="cb29-12"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-12" tabindex="-1"></a><span class="co"># Add the PCoA coordinates in a new reducedDim slot</span></span>
+<span id="cb29-13"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-13" tabindex="-1"></a><span class="co"># following the instructions in help(&quot;runMDS&quot;)</span></span>
+<span id="cb29-14"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb29-14" tabindex="-1"></a><span class="fu">reducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BCrarefaction&quot;</span>) <span class="ot">&lt;-</span> <span class="fu">cmdscale</span>(<span class="at">d =</span> bc_rarefaction, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">eig =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>points</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb30-1" tabindex="-1"></a><span class="fu">plotReducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BCrarefaction&quot;</span>, </span>
+<span id="cb30-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb30-2" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb30-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb30-3" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Rarefaction Bray-Curtis, PCoA&quot;</span>,</span>
+<span id="cb30-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb30-4" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;subsamplings = 3, N(L,min) =&quot;</span>, <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum)))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>As we did for the richness index, the process can be automatised:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-1" tabindex="-1"></a>rarefaction_BC_PCoA <span class="ot">&lt;-</span> <span class="cf">function</span>(</span>
+<span id="cb31-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-2" tabindex="-1"></a>    tse, <span class="co"># The object to use</span></span>
+<span id="cb31-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-3" tabindex="-1"></a>    <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, <span class="co"># Assay to use</span></span>
+<span id="cb31-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-4" tabindex="-1"></a>    <span class="at">subsamplings =</span> <span class="dv">10</span>, <span class="co"># Number of subsamplings</span></span>
+<span id="cb31-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-5" tabindex="-1"></a>    <span class="at">minLibSize =</span> <span class="cn">NULL</span>, <span class="co"># The desired library size </span></span>
+<span id="cb31-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-6" tabindex="-1"></a>    <span class="at">seed =</span> <span class="dv">123</span>, <span class="co"># The seed</span></span>
+<span id="cb31-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-7" tabindex="-1"></a>    <span class="at">BPPARAM =</span> <span class="fu">SerialParam</span>()){ <span class="co"># Parallelisation</span></span>
+<span id="cb31-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-8" tabindex="-1"></a>    </span>
+<span id="cb31-9"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-9" tabindex="-1"></a>    counts <span class="ot">&lt;-</span> <span class="fu">assay</span>(tse, <span class="st">&quot;counts&quot;</span>)</span>
+<span id="cb31-10"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-10" tabindex="-1"></a>    </span>
+<span id="cb31-11"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-11" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(minLibSize))</span>
+<span id="cb31-12"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-12" tabindex="-1"></a>        minLibSize <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">colSums</span>(counts))</span>
+<span id="cb31-13"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-13" tabindex="-1"></a>    </span>
+<span id="cb31-14"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-14" tabindex="-1"></a>    dist_list <span class="ot">&lt;-</span> <span class="fu">bplapply</span>(</span>
+<span id="cb31-15"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-15" tabindex="-1"></a>        <span class="at">X =</span> <span class="dv">1</span><span class="sc">:</span>subsamplings, </span>
+<span id="cb31-16"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-16" tabindex="-1"></a>        <span class="at">BPPARAM =</span> BPPARAM, </span>
+<span id="cb31-17"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-17" tabindex="-1"></a>        <span class="at">BPOPTIONS =</span> <span class="fu">bpoptions</span>(<span class="at">RNGseed =</span> seed), </span>
+<span id="cb31-18"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-18" tabindex="-1"></a>        <span class="at">FUN =</span> <span class="cf">function</span>(sub){</span>
+<span id="cb31-19"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-19" tabindex="-1"></a>            <span class="co"># Subsampling step</span></span>
+<span id="cb31-20"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-20" tabindex="-1"></a>            tse <span class="ot">&lt;-</span> mia<span class="sc">::</span><span class="fu">subsampleCounts</span>(tse, </span>
+<span id="cb31-21"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-21" tabindex="-1"></a>                <span class="at">assay.type =</span> assay.type, </span>
+<span id="cb31-22"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-22" tabindex="-1"></a>                <span class="at">min_size =</span> minLibSize,</span>
+<span id="cb31-23"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-23" tabindex="-1"></a>                <span class="co"># seed = runif(1, 0, .Machine$integer.max), </span></span>
+<span id="cb31-24"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-24" tabindex="-1"></a>                <span class="at">replace =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb31-25"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-25" tabindex="-1"></a>                <span class="at">verbose =</span> <span class="cn">FALSE</span>, </span>
+<span id="cb31-26"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-26" tabindex="-1"></a>                <span class="at">name =</span> <span class="st">&quot;sub&quot;</span>)</span>
+<span id="cb31-27"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-27" tabindex="-1"></a>            <span class="co"># BC calculation step</span></span>
+<span id="cb31-28"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-28" tabindex="-1"></a>            BC_dist <span class="ot">&lt;-</span> vegan<span class="sc">::</span><span class="fu">vegdist</span>(</span>
+<span id="cb31-29"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-29" tabindex="-1"></a>                <span class="at">x =</span> <span class="fu">t</span>(<span class="fu">assay</span>(tse, <span class="st">&quot;sub&quot;</span>)),</span>
+<span id="cb31-30"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-30" tabindex="-1"></a>                <span class="at">method =</span> <span class="st">&quot;bray&quot;</span>)</span>
+<span id="cb31-31"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-31" tabindex="-1"></a>            <span class="fu">return</span>(BC_dist)</span>
+<span id="cb31-32"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-32" tabindex="-1"></a>    })</span>
+<span id="cb31-33"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-33" tabindex="-1"></a>    <span class="co"># Compute the mean BC distance</span></span>
+<span id="cb31-34"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-34" tabindex="-1"></a>    avg_BC_dist <span class="ot">&lt;-</span> <span class="fu">Reduce</span>(<span class="at">f =</span> <span class="st">&#39;+&#39;</span>, dist_list) <span class="sc">/</span> subsamplings</span>
+<span id="cb31-35"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-35" tabindex="-1"></a>    <span class="co"># Compute the PCoA coordinates and return them</span></span>
+<span id="cb31-36"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-36" tabindex="-1"></a>    <span class="fu">cmdscale</span>(<span class="at">d =</span> avg_BC_dist, <span class="at">k =</span> <span class="dv">2</span>, <span class="at">eig =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>points</span>
+<span id="cb31-37"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb31-37" tabindex="-1"></a>}</span></code></pre></div>
+<p>We run it in parallel (Linux or MacOS, Windows users should use <code>BPPARAM = SerialParam()</code>) and we directly store the computed values inside the <code>TreeSummarizedExperiment</code> object in the <code>reducedDim</code> slot.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb32-1" tabindex="-1"></a><span class="fu">reducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BCrarefaction100&quot;</span>) <span class="ot">&lt;-</span> </span>
+<span id="cb32-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb32-2" tabindex="-1"></a>    <span class="fu">rarefaction_BC_PCoA</span>(</span>
+<span id="cb32-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb32-3" tabindex="-1"></a>        <span class="at">tse =</span> gp_genus, </span>
+<span id="cb32-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb32-4" tabindex="-1"></a>        <span class="at">assay.type =</span> <span class="st">&quot;counts&quot;</span>, </span>
+<span id="cb32-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb32-5" tabindex="-1"></a>        <span class="at">subsamplings =</span> <span class="dv">100</span>,</span>
+<span id="cb32-6"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb32-6" tabindex="-1"></a>        <span class="at">minLibSize =</span> <span class="cn">NULL</span>, </span>
+<span id="cb32-7"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb32-7" tabindex="-1"></a>        <span class="at">seed =</span> <span class="dv">321</span>, </span>
+<span id="cb32-8"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb32-8" tabindex="-1"></a>        <span class="at">BPPARAM =</span> <span class="fu">MulticoreParam</span>(<span class="dv">4</span>))</span></code></pre></div>
+<p>Finally, the graphical representation of rarefied beta-diversity using Bray-Curtis dissimilarity index and PCoA ordination (seed = 123, number of subsamplings = 100, <span class="math inline">\(N_{L,min} = 58688\)</span>) is reported below.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb33-1" tabindex="-1"></a><span class="fu">plotReducedDim</span>(gp_genus, <span class="st">&quot;PCoA_BCrarefaction100&quot;</span>, </span>
+<span id="cb33-2"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb33-2" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;SampleType&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb33-3"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb33-3" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Rarefaction Bray-Curtis, PCoA&quot;</span>,</span>
+<span id="cb33-4"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb33-4" tabindex="-1"></a>         <span class="at">subtitle =</span> <span class="fu">paste</span>(<span class="st">&quot;subsamplings = 100, seed = 321, N(L,min) =&quot;</span>, <span class="fu">min</span>(gp_genus<span class="sc">$</span>sum))) <span class="sc">+</span> </span>
+<span id="cb33-5"><a href="rarefaction-practice-in-microbiome-data-analysis.html#cb33-5" tabindex="-1"></a>    <span class="fu">scale_y_reverse</span>()</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p>In this scenario rarefaction and Total Sum Scaling (TSS) normalization produced similar results. This is probably due to the fact that all samples are already at a sufficient depth to capture most of the microbial diversity.</p>
+<p>But this can also occur when:</p>
+<ul>
+<li><p>the differences in sequencing depth between samples are relatively small;</p></li>
+<li><p>the samples have similar distributions of taxa and similar alpha diversity measures, so the impact of rarefaction or TSS normalization is minimal.</p></li>
+</ul>
+<p>However, in cases where there are substantial differences in sequencing depth or if the samples have highly variable distributions of taxa, rarefaction and TSS normalization might lead to different results. In such situations, researchers should carefully consider which normalization approach is more appropriate for their specific dataset and research objectives.</p>
+</div>
+</div>
+<div id="references" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> References<a href="rarefaction-practice-in-microbiome-data-analysis.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div class="csl-entry">
+Caporaso,J.G. <em>et al.</em> (2011) <a href="https://doi.org/10.1073/pnas.1000080107">Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample</a>. <em>Proceedings of the National Academy of Sciences</em>, <strong>108</strong>, 4516–4522.
+</div>
+<div class="csl-entry">
+McMurdie,P.J. and Holmes,S. (2014) <a href="https://doi.org/10.1371/journal.pcbi.1003531">Waste Not, Want Not: Why Rarefying Microbiome Data Is Inadmissible</a>. <em>PLOS Computational Biology</em>, <strong>10</strong>, e1003531.
+</div>
+<div class="csl-entry">
+Schloss,P.D. (2023) <a href="https://doi.org/10.1101/2023.06.23.546312">Waste not, want not: Revisiting the analysis that called into question the practice of rarefaction</a>.
+</div>
+<div class="csl-entry">
+Weiss,S. <em>et al.</em> (2017) Normalization and microbial differential abundance strategies depend upon data characteristics. <em>Microbiome</em>, <strong>5</strong>, 27.
+</div>
+</div>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-caporaso2011" class="csl-entry">
+Caporaso,J.G. <em>et al.</em> (2011) <a href="https://doi.org/10.1073/pnas.1000080107">Global patterns of 16S rRNA diversity at a depth of millions of sequences per sample</a>. <em>Proceedings of the National Academy of Sciences</em>, <strong>108</strong>, 4516–4522.
+</div>
+<div id="ref-mcmurdie2014" class="csl-entry">
+McMurdie,P.J. and Holmes,S. (2014) <a href="https://doi.org/10.1371/journal.pcbi.1003531">Waste Not, Want Not: Why Rarefying Microbiome Data Is Inadmissible</a>. <em>PLOS Computational Biology</em>, <strong>10</strong>, e1003531.
+</div>
+<div id="ref-schloss2023" class="csl-entry">
+Schloss,P.D. (2023) <a href="https://doi.org/10.1101/2023.06.23.546312">Waste not, want not: Revisiting the analysis that called into question the practice of rarefaction</a>.
+</div>
+<div id="ref-weiss2017" class="csl-entry">
+Weiss,S. <em>et al.</em> (2017) Normalization and microbial differential abundance strategies depend upon data characteristics. <em>Microbiome</em>, <strong>5</strong>, 27.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/mcalgaro93/randomtopics/edit/main/01-Rarefaction.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/mcalgaro93/randomtopics/blob/main/01-Rarefaction.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

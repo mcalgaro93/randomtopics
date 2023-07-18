@@ -3,7 +3,12 @@ title: "Random Topics"
 author: "Matteo Calgaro"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
+bibliography: references.bib
+csl: bioinformatics.csl
+link-citations: yes
 ---
 
-# Down the rabbit-hole
+# About this book
+
+In the opening of this book, I warmly welcome you into the intimate realm of my academic life. This (just started) collection seeks to capture some thoughts, lessons, seminars, and practical examples gathered throughout my scholarly journey. Within these pages, I hope to share valuable informations and experiences that have shaped my understanding and growth. With humility and gratitude, I invite you to explore this humble compilation.
 

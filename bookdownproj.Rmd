@@ -1,3 +1,29 @@
+--- 
+title: "Random Topics"
+author: "Matteo Calgaro"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+bibliography: references.bib
+csl: bioinformatics.csl
+link-citations: yes
+---
+--- 
+title: "Random Topics"
+author: "Matteo Calgaro"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+bibliography: references.bib
+csl: bioinformatics.csl
+link-citations: yes
+---
+
+# About this book
+
+In the opening of this book, I warmly welcome you into the intimate realm of my academic life. This (just started) collection seeks to capture some thoughts, lessons, seminars, and practical examples gathered throughout my scholarly journey. Within these pages, I hope to share valuable informations and experiences that have shaped my understanding and growth. With humility and gratitude, I invite you to explore this humble compilation.
+
+
+<!--chapter:end:index.Rmd-->
+
 ---
 output: html_document
 bibliography: references.bib
@@ -588,8 +614,12 @@ But this can also occur when:
 
 However, in cases where there are substantial differences in sequencing depth or if the samples have highly variable distributions of taxa, rarefaction and TSS normalization might lead to different results. In such situations, researchers should carefully consider which normalization approach is more appropriate for their specific dataset and research objectives.
 
+A | B
+--|--
+  | Ciao
 
-*Presented at the [DataScience Group meeting](https://github.com/quadram-institute-bioscience/datasciencegroup/#readme),
-[Quadram Institute Bioscience](https://quadram.ac.uk/), July 2023*
 
 ## References
+
+<!--chapter:end:01-Rarefaction.Rmd-->
+

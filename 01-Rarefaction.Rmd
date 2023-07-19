@@ -17,6 +17,15 @@ In the last decade, there has been ongoing debate regarding the optimal approach
 
 -   provide the code to implement rarefaction curves and to estimate rarefaction estimates of richness and Bray-Curtis dissimilarities.
 
+## Required packages
+
+List of libraries used:
+
+* [mia](https://github.com/microbiome/mia#readme) (`BiocManager::install("mia")`)
+* [miaViz](https://microbiome.github.io/miaViz/) (`BiocManager::install("miaViz")`)
+* [scater](https://bioconductor.org/packages/release/bioc/html/scater.html) (`scaterBiocManager::install("scater")`)
+* [patchwork](https://patchwork.data-imaginist.com/) (`install.packages('patchwork')`)
+
 ## Introduction and definitions
 
 Rarefaction in microbiome research was introduced from ecology research out of the need to address the issue of uneven sampling depth. When studying microbial communities using high-throughput sequencing techniques like 16S rRNA gene sequencing or shotgun metagenomics, the number of sequencing reads obtained from different samples can vary significantly. This uneven sampling depth can introduce biases and make it challenging to compare the diversity and abundance of microbial taxa between samples accurately.
@@ -50,32 +59,77 @@ count_matrix
 colSums(count_matrix)
 ```
 
-According to the definition, we choose $N_{L,min} = 300$ and we subsample, without replacement (random number generation seed equal to 123), the counts such that they all the samples have size $300$.
+According to the definition, we choose $N_{L,min} = 300$ and we subsample, without replacement
+(random number generation seed equal to 123, see [why](https://www.tutorialspoint.com/why-we-should-use-set-seed-in-r)),
+the counts such that they all the samples have size $300$.
 
 ```{r}
+# Set the random seed for reproducibility 
 set.seed(123)
-Lmin <- min(colSums(count_matrix))
-count_rarefy <- apply(count_matrix, 2, FUN = function(smpl){
-    vec <- rep(rownames(count_matrix), times = smpl)
-    subsampling <- sample(vec, size = Lmin, replace = FALSE)
-    table(subsampling)
-})
-count_rarefy
+
+# Function to rarefy counts of a count matrix
+rarefy_function <- function(count_matrix) {
+  set.seed(123)
+  
+  # Determine the minimum library size across samples
+  minLibSize <- min(colSums(count_matrix))
+  
+  # Perform rarefaction on each sample in the count matrix
+  count_rarefy <- apply(count_matrix, 2, FUN = function(smpl){
+    
+      # Create a vector of taxon names proportional to their counts in the sample
+      vec <- rep(rownames(count_matrix), times = smpl)
+        
+      # Perform subsampling by randomly selecting taxon names without replacement
+      subsampling <- sample(vec, size = minLibSize, replace = FALSE)
+        
+      # Create a table of the subsampled taxon counts
+      table(subsampling)
+  })
+  
+  return(count_rarefy)
+}
+
+rarefied_counts <- rarefy_function(count_matrix)
+rarefied_counts
 ```
 
-The resulting table is a table where the `S1` remains the same as before subsampling. Indeed, subsampling $N_{L,min} = 300$ counts from a sample with that same library size is like taking the entire sample. `S2` instead, has now a total of 300 counts divided across the three taxa.
+The resulting table is a table where the `S1` remains the same as before subsampling. 
+Indeed, subsampling $N_{L,min} = 300$ counts from a sample with that same library size is like taking the entire sample. `S2` instead, has now a total of 300 counts divided across the three taxa.
 
 As the subsampling step is performed only once, another way to obtain the rarefied counts more easily, is to divide the counts by their library size, multiply the relative abundances by $N_{L,min} = 300$, and round the results.
 
 ```{r}
-count_rarefy_simple <- apply(count_matrix, 2, FUN = function(smpl){
-    rel_abundance <- smpl/sum(smpl) 
-    round(Lmin * rel_abundance, digits = 0)
-})
-count_rarefy_simple
+rarefy_simple_function <- function(count_matrix) {
+  set.seed(123)
+  
+  # Determine the minimum library size across samples
+  minLibSize <- min(colSums(count_matrix))
+  
+  # Perform simple rarefaction on each sample in the count matrix
+  count_rarefy_simple <- apply(count_matrix, 2, FUN = function(smpl){
+    
+    # Calculate the relative abundance of each taxon in the sample
+    rel_abundance <- smpl / sum(smpl)
+    
+    # Multiply the relative abundances by Lmin to obtain the rarefied counts
+    rarefied_counts <- round(minLibSize * rel_abundance, digits = 0)
+    
+    # Return the rarefied counts for the current sample
+    return(rarefied_counts)
+  })
+  
+  return(count_rarefy_simple)
+}
+count_rarefied_simple <- rarefy_simple_function(count_matrix)
+count_rarefied_simple
 ```
 
-According to [@schloss2023], the authors of [@mcmurdie2014] were correct to state that the distinction between "rarefying" and "rarefaction" was confusing and led to their conflation. However, they poorly managed to solve the problem due to misleading sentences throughout the publication. Traditionally, repeating the subsampling step a large number of times and averaging the result is called *rarefaction*. Instead, *rarefying* or *subsampling* is rarefaction, but with a single randomization. To minimize confusion, we will use "subsampling" in place of "rarefying" through the rest of this chapter. For clarity, we will use the same definition of rarefaction of [@schloss2023]:
+According to [@schloss2023], the authors of [@mcmurdie2014] were correct to state that the distinction between "rarefying" and "rarefaction" was confusing and led to their conflation.
+However, they poorly managed to solve the problem due to misleading sentences throughout the publication.
+Traditionally, repeating the subsampling step a large number of times and averaging the result is called *rarefaction*. Instead, *rarefying* or *subsampling* is rarefaction, but with a single randomization.
+To minimize confusion, we will use "subsampling" in place of "rarefying" through the rest of this chapter.
+For clarity, we will use the same definition of rarefaction of [@schloss2023]:
 
 1.  Select a minimum library size, $N_{L,min}$. Researchers are encouraged to report the value of $N_{L,min}$.
 
@@ -91,14 +145,26 @@ According to [@schloss2023], the authors of [@mcmurdie2014] were correct to stat
 
 ## Rarefaction in practice
 
-The *rarefaction*, *i.e.* repeating the subsampling step a large number of times and averaging the result, is here exemplified for Richness index and Bray-Curtis dissimilarity index.
+The *rarefaction*, *i.e.* repeating the subsampling step a large number of times and averaging the result,
+is here exemplified for 
+[Richness index](https://www.coastalwiki.org/wiki/Measurements_of_biodiversity)
+and
+[Bray-Curtis dissimilarity index](https://en.wikipedia.org/wiki/Bray%E2%80%93Curtis_dissimilarity).
 
-Let's start by using an example dataset from a research published in PNAS in early 2011 [@caporaso2011]. This work compared the microbial communities from 25 environmental samples and three known "mock communities" -- a total of 9 sample types -- at a depth averaging 3.1 million reads per sample.
+Let's start by using an example dataset from a research published in PNAS in early 2011 [@caporaso2011].
+This work compared the microbial communities from 25 environmental samples and three known "mock communities"
+-- a total of 9 sample types -- at a depth averaging 3.1 million reads per sample. 
+The [dataset](https://microbiome.github.io/mia/reference/mia-datasets.html)
+comes with the [mia](https://microbiome.github.io/mia/) package.
 
 ```{r, message=FALSE, warning=FALSE}
 library(mia)
 data("GlobalPatterns", package = "mia")
+
+# See https://microbiome.github.io/mia/reference/agglomerate-methods.html
 gp_genus <- mia::agglomerateByRank(GlobalPatterns, "Genus")
+
+# Filter out rows (taxa) with zero counts across all samples
 gp_genus <- gp_genus[
     rowSums(assay(gp_genus, "counts")) > 0, ]
 
@@ -111,6 +177,9 @@ Here we show the distribution of library sizes across samples. We have library s
 ```{r, fig.cap="Sample library sizes grouped and coloured by sample type."}
 library(miaViz)
 summary(colData(gp_genus)$sum)
+
+# Create a scatter plot of the 'gp_genus' dataset, where the y-axis represents the 'sum' column in the colData,
+# the x-axis represents the 'SampleType' column in the colData, and the points are colored by the 'SampleType' column
 plotColData(object = gp_genus, 
     y = "sum", x = "SampleType", 
     colour_by = "SampleType") + 
@@ -121,7 +190,7 @@ plotColData(object = gp_genus,
 
 Richness refers to the overall count of species within a community (sample). The most basic richness index corresponds to the number of observed species (observed richness). Richness estimates remain unaffected by the abundances of individual species.
 
-To compute richness we use the `estimateRichness` function of the `mia` package.
+To compute richness we use the [`estimateRichness`](https://rdrr.io/github/microbiome/mia/man/estimateRichness.html) function of the `mia` package.
 
 ```{r}
 gp_genus <- mia::estimateRichness(gp_genus, 
@@ -151,7 +220,12 @@ plotColData(object = gp_genus,
          title = "Richness vs Library Size")
 ```
 
-But all of the above plots are generated from raw data. Here we want to inspect the effect of rarefaction. For this reason we use the `subsampleCounts` function of the package `mia` to obtain subsampled counts. We repeat this process 3 times with 3 different seeds (1, 2, and 3). We store the results in three differentially named assays of the `TreeSummarizedExperiment` object: *rare1*, *rare2*, and *rare3*.
+But all of the above plots are generated from raw data. 
+Here we want to inspect the effect of rarefaction. 
+For this reason we use the [`subsampleCounts`](https://rdrr.io/github/FelixErnst/mia/man/subsampleCounts.html)
+function of the package `mia` to obtain subsampled counts.
+We repeat this process 3 times with 3 different seeds (1, 2, and 3).
+We store the results in three differentially named assays of the `TreeSummarizedExperiment` object: *rare1*, *rare2*, and *rare3*.
 
 ```{r, warning=FALSE, message=FALSE}
 gp_genus <- mia::subsampleCounts(gp_genus, 

@@ -21,12 +21,12 @@ In the last decade, there has been ongoing debate regarding the optimal approach
 
 List of libraries used:
 
-* [mia](https://github.com/microbiome/mia#readme) (`BiocManager::install("mia")`)
-* [miaViz](https://microbiome.github.io/miaViz/) (`BiocManager::install("miaViz")`)
-* [scater](https://bioconductor.org/packages/release/bioc/html/scater.html) (`scaterBiocManager::install("scater")`)
-* [patchwork](https://patchwork.data-imaginist.com/) (`install.packages('patchwork')`)
-* [ranacapa](https://github.com/gauravsk/ranacapa) (`devtools::install_github("gauravsk/ranacapa")`)
-* [BiocParallel](https://bioconductor.org/packages/release/bioc/html/BiocParallel.html) (`BiocManager::install("BiocParallel")`)
+-   [mia](https://github.com/microbiome/mia#readme) (`BiocManager::install("mia")`)
+-   [miaViz](https://microbiome.github.io/miaViz/) (`BiocManager::install("miaViz")`)
+-   [scater](https://bioconductor.org/packages/release/bioc/html/scater.html) (`scaterBiocManager::install("scater")`)
+-   [patchwork](https://patchwork.data-imaginist.com/) (`install.packages('patchwork')`)
+-   [ranacapa](https://github.com/gauravsk/ranacapa) (`devtools::install_github("gauravsk/ranacapa")`)
+-   [BiocParallel](https://bioconductor.org/packages/release/bioc/html/BiocParallel.html) (`BiocManager::install("BiocParallel")`)
 
 ## Introduction and definitions
 
@@ -61,9 +61,7 @@ count_matrix
 colSums(count_matrix)
 ```
 
-According to the definition, we choose $N_{L,min} = 300$ and we subsample, without replacement
-(random number generation seed equal to 123, see [why](https://www.tutorialspoint.com/why-we-should-use-set-seed-in-r)),
-the counts such that they all the samples have size $300$.
+According to the definition, we choose $N_{L,min} = 300$ and we subsample, without replacement (random number generation seed equal to 123, see [why](https://www.tutorialspoint.com/why-we-should-use-set-seed-in-r)), the counts such that they all the samples have size $300$.
 
 ```{r}
 # Set the random seed for reproducibility 
@@ -96,8 +94,7 @@ rarefied_counts <- rarefy_function(count_matrix)
 rarefied_counts
 ```
 
-The resulting table is a table where the `S1` remains the same as before subsampling. 
-Indeed, subsampling $N_{L,min} = 300$ counts from a sample with that same library size is like taking the entire sample. `S2` instead, has now a total of 300 counts divided across the three taxa.
+The resulting table is a table where the `S1` remains the same as before subsampling. Indeed, subsampling $N_{L,min} = 300$ counts from a sample with that same library size is like taking the entire sample. `S2` instead, has now a total of 300 counts divided across the three taxa.
 
 As the subsampling step is performed only once, another way to obtain the rarefied counts more easily, is to divide the counts by their library size, multiply the relative abundances by $N_{L,min} = 300$, and round the results.
 
@@ -127,11 +124,7 @@ count_rarefied_simple <- rarefy_simple_function(count_matrix)
 count_rarefied_simple
 ```
 
-According to [@schloss2023], the authors of [@mcmurdie2014] were correct to state that the distinction between "rarefying" and "rarefaction" was confusing and led to their conflation.
-However, they poorly managed to solve the problem due to misleading sentences throughout the publication.
-Traditionally, repeating the subsampling step a large number of times and averaging the result is called *rarefaction*. Instead, *rarefying* or *subsampling* is rarefaction, but with a single randomization.
-To minimize confusion, we will use "subsampling" in place of "rarefying" through the rest of this chapter.
-For clarity, we will use the same definition of rarefaction of [@schloss2023]:
+According to [@schloss2023], the authors of [@mcmurdie2014] were correct to state that the distinction between "rarefying" and "rarefaction" was confusing and led to their conflation. However, they poorly managed to solve the problem due to misleading sentences throughout the publication. Traditionally, repeating the subsampling step a large number of times and averaging the result is called *rarefaction*. Instead, *rarefying* or *subsampling* is rarefaction, but with a single randomization. To minimize confusion, we will use "subsampling" in place of "rarefying" through the rest of this chapter. For clarity, we will use the same definition of rarefaction of [@schloss2023]:
 
 1.  Select a minimum library size, $N_{L,min}$. Researchers are encouraged to report the value of $N_{L,min}$.
 
@@ -147,17 +140,9 @@ For clarity, we will use the same definition of rarefaction of [@schloss2023]:
 
 ## Rarefaction in practice
 
-The *rarefaction*, *i.e.* repeating the subsampling step a large number of times and averaging the result,
-is here exemplified for 
-[Richness index](https://www.coastalwiki.org/wiki/Measurements_of_biodiversity)
-and
-[Bray-Curtis dissimilarity index](https://en.wikipedia.org/wiki/Bray%E2%80%93Curtis_dissimilarity).
+The *rarefaction*, *i.e.* repeating the subsampling step a large number of times and averaging the result, is here exemplified for [Richness index](https://www.coastalwiki.org/wiki/Measurements_of_biodiversity) and [Bray-Curtis dissimilarity index](https://en.wikipedia.org/wiki/Bray%E2%80%93Curtis_dissimilarity).
 
-Let's start by using an example dataset from a research published in PNAS in early 2011 [@caporaso2011].
-This work compared the microbial communities from 25 environmental samples and three known "mock communities"
--- a total of 9 sample types -- at a depth averaging 3.1 million reads per sample. 
-The [dataset](https://microbiome.github.io/mia/reference/mia-datasets.html)
-comes with the [mia](https://microbiome.github.io/mia/) package.
+Let's start by using an example dataset from a research published in PNAS in early 2011 [@caporaso2011]. This work compared the microbial communities from 25 environmental samples and three known "mock communities" -- a total of 9 sample types -- at a depth averaging 3.1 million reads per sample. The [dataset](https://microbiome.github.io/mia/reference/mia-datasets.html) comes with the [mia](https://microbiome.github.io/mia/) package.
 
 ```{r, message=FALSE, warning=FALSE}
 library(mia)
@@ -222,12 +207,7 @@ plotColData(object = gp_genus,
          title = "Richness vs Library Size")
 ```
 
-But all of the above plots are generated from raw data. 
-Here we want to inspect the effect of rarefaction. 
-For this reason we use the [`subsampleCounts`](https://rdrr.io/github/FelixErnst/mia/man/subsampleCounts.html)
-function of the package `mia` to obtain subsampled counts.
-We repeat this process 3 times with 3 different seeds (1, 2, and 3).
-We store the results in three differentially named assays of the `TreeSummarizedExperiment` object: *rare1*, *rare2*, and *rare3*.
+But all of the above plots are generated from raw data. Here we want to inspect the effect of rarefaction. For this reason we use the [`subsampleCounts`](https://rdrr.io/github/FelixErnst/mia/man/subsampleCounts.html) function of the package `mia` to obtain subsampled counts. We repeat this process 3 times with 3 different seeds (1, 2, and 3). We store the results in three differentially named assays of the `TreeSummarizedExperiment` object: *rare1*, *rare2*, and *rare3*.
 
 ```{r, warning=FALSE, message=FALSE}
 gp_genus <- mia::subsampleCounts(gp_genus, 
@@ -588,8 +568,6 @@ But this can also occur when:
 
 However, in cases where there are substantial differences in sequencing depth or if the samples have highly variable distributions of taxa, rarefaction and TSS normalization might lead to different results. In such situations, researchers should carefully consider which normalization approach is more appropriate for their specific dataset and research objectives.
 
-
-*Presented at the [DataScience Group meeting](https://github.com/quadram-institute-bioscience/datasciencegroup/#readme),
-[Quadram Institute Bioscience](https://quadram.ac.uk/), July 2023*
+*Presented at the [DataScience Group meeting](https://github.com/quadram-institute-bioscience/datasciencegroup/#readme), [Quadram Institute Bioscience](https://quadram.ac.uk/), July 2023*
 
 ## References

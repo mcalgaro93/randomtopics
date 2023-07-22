@@ -1,11 +1,15 @@
 --- 
 title: "Random Topics"
-author: "Matteo Calgaro"
+author: 
+  - Matteo Calgaro^[University of Verona, Verona, Italy, matteo.calgaro_01@univr.it]
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 bibliography: references.bib
 csl: bioinformatics.csl
 link-citations: yes
+rmd_files: ["index.Rmd",
+    "01-Rarefaction.Rmd",
+    "99-Bibliography.Rmd"]
 ---
 
 # About this book

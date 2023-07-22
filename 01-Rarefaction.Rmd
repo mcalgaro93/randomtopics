@@ -1,14 +1,14 @@
 ---
 output: html_document
-bibliography: references.bib
-csl: bioinformatics.csl
-link-citations: yes
-author: 
-  - Matteo Calgaro^[University of Verona, Verona, Italy, matteo.calgaro_01@univr.it]
-  - Andrea Telatin^[Quadram Institute Bioscience, Norwich, UK, andrea.telatin@quadram.ac.uk]
 ---
 
 # Rarefaction Practice in Microbiome Data Analysis
+
+*Presented at the [DataScience Group meeting](https://github.com/quadram-institute-bioscience/datasciencegroup/#readme), [Quadram Institute Bioscience](https://quadram.ac.uk/), July 2023*
+
+Co-author of this chapter: Andrea Telatin[^01-rarefaction-1]
+
+[^01-rarefaction-1]: [*Quadram Institute Bioscience*](https://quadram.ac.uk/)*,* andrea.telatin\@quadram.ac.uk
 
 In the last decade, there has been ongoing debate regarding the optimal approach for normalizing sequencing depth in samples analyzed using 16S rRNA gene sequencing. A highly influential paper by McMurdie and Holmes [@mcmurdie2014] strongly argued against the practice of rarefying sequence counts, deeming it "inadmissible" and discouraging its utilization. Despite a rebuttal on this subject [@weiss2017], which demonstrated the benefits of rarefying in certain cases, the proponents of alternative normalization method seem to have a predominant influence within the microbiome research community. Nevertheless, a recent publication by Patrick Schloss [@schloss2023], shows that rarefaction is the most robust approach to control for uneven sequencing effort when considered across a variety of alpha and beta diversity metrics.
 
@@ -26,6 +26,7 @@ List of libraries used:
 
 -   [mia](https://github.com/microbiome/mia#readme) (`BiocManager::install("mia")`)
 -   [miaViz](https://microbiome.github.io/miaViz/) (`BiocManager::install("miaViz")`)
+-   [ape](https://cran.r-project.org/web/packages/ape/index.html) (`install.packages("ape")`)
 -   [scater](https://bioconductor.org/packages/release/bioc/html/scater.html) (`scaterBiocManager::install("scater")`)
 -   [patchwork](https://patchwork.data-imaginist.com/) (`install.packages('patchwork')`)
 -   [ranacapa](https://github.com/gauravsk/ranacapa) (`devtools::install_github("gauravsk/ranacapa")`)
@@ -47,7 +48,7 @@ Library size normalization by random subsampling without replacement is called *
 
 Let's make a practical example in R. We start by creating a very simple count matrix with 3 taxa and 2 samples.
 
-```{r}
+```{r, class.source = "fold-show"}
 # Generate a very simple count matrix where the first
 # sample has half the library size of the second sample
 count_matrix <- matrix(c(68, 32, 200, 200, 200, 200), 
@@ -60,13 +61,13 @@ count_matrix
 
 `S2` sample has a library size which is twice the library size of sample `S1`.
 
-```{r}
+```{r, class.source = "fold-show"}
 colSums(count_matrix)
 ```
 
 According to the definition, we choose $N_{L,min} = 300$ and we subsample, without replacement (random number generation seed equal to 123, see [why](https://www.tutorialspoint.com/why-we-should-use-set-seed-in-r)), the counts such that they all the samples have size $300$.
 
-```{r}
+```{r, class.source = "fold-show"}
 # Function to rarefy counts of a count matrix
 rarefy_function <- function(count_matrix) {
   
@@ -100,7 +101,7 @@ The resulting table is a table where the `S1` remains the same as before subsamp
 
 As the subsampling step is performed only once, another way to obtain the rarefied counts more easily, is to divide the counts by their library size, multiply the relative abundances by $N_{L,min} = 300$, and round the results.
 
-```{r}
+```{r, class.source = "fold-show"}
 rarefy_simple_function <- function(count_matrix) {
   
   # Determine the minimum library size across samples
@@ -145,7 +146,7 @@ The *rarefaction*, *i.e.* repeating the subsampling step a large number of times
 
 Let's start by using an example dataset from a research published in PNAS in early 2011 [@caporaso2011]. This work compared the microbial communities from 25 environmental samples and three known "mock communities" -- a total of 9 sample types -- at a depth averaging 3.1 million reads per sample. The [dataset](https://microbiome.github.io/mia/reference/mia-datasets.html) comes with the [mia](https://microbiome.github.io/mia/) package.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, class.source = "fold-show"}
 library(mia)
 data("GlobalPatterns", package = "mia")
 
@@ -162,7 +163,7 @@ gp_genus <- addPerCellQC(gp_genus)
 
 Here we show the distribution of library sizes across samples. We have library sizes ranging from 58688 reads to 40x times more.
 
-```{r, fig.cap="Sample library sizes grouped and coloured by sample type."}
+```{r, fig.cap="Sample library sizes grouped and coloured by sample type.", class.source = "fold-show"}
 library(miaViz)
 summary(colData(gp_genus)$sum)
 
@@ -180,7 +181,7 @@ Richness refers to the overall count of species within a community (sample). The
 
 To compute richness we use the [`estimateRichness`](https://rdrr.io/github/microbiome/mia/man/estimateRichness.html) function of the `mia` package.
 
-```{r}
+```{r, class.source = "fold-show"}
 gp_genus <- mia::estimateRichness(gp_genus, 
     assay.type = "counts", 
     index = "observed")
@@ -188,7 +189,7 @@ gp_genus <- mia::estimateRichness(gp_genus,
 
 We can inspect the observed richness distribution of each sample type:
 
-```{r, fig.cap="Richness estimates grouped and coloured by sample type."}
+```{r, fig.cap="Richness estimates grouped and coloured by sample type.", class.source = "fold-show"}
 p_r <- plotColData(object = gp_genus, 
     y = "observed", x = "SampleType", 
     colour_by = "SampleType") + 
@@ -199,7 +200,7 @@ p_r
 
 And we can also describe the relationship between library size and richness. When the sequencing depth is enough to describe the samples we do not expect to see any particular pattern in this kind of graphical representation.
 
-```{r, fig.cap="Relationship between richness and library size coloured by sample type."}
+```{r, fig.cap="Relationship between richness and library size coloured by sample type.", class.source = "fold-show"}
 plotColData(object = gp_genus, 
     x = "sum", y = "observed", 
     colour_by = "SampleType") + 
@@ -210,7 +211,7 @@ plotColData(object = gp_genus,
 
 But all of the above plots are generated from raw data. Here we want to inspect the effect of rarefaction. For this reason we use the [`subsampleCounts`](https://rdrr.io/github/FelixErnst/mia/man/subsampleCounts.html) function of the package `mia` to obtain subsampled counts. We repeat this process 3 times with 3 different seeds (1, 2, and 3). We store the results in three differentially named assays of the `TreeSummarizedExperiment` object: *rare1*, *rare2*, and *rare3*.
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, class.source = "fold-show"}
 gp_genus <- mia::subsampleCounts(gp_genus, 
     assay.type = "counts", 
     min_size = min(gp_genus$sum), 
@@ -233,7 +234,7 @@ gp_genus <- mia::subsampleCounts(gp_genus,
 
 We compute richness for each subsampled count matrix:
 
-```{r}
+```{r, class.source = "fold-show"}
 gp_genus <- estimateRichness(gp_genus, assay.type = "rare1", name = "rich1", index = "observed")
 gp_genus <- estimateRichness(gp_genus, assay.type = "rare2", name = "rich2", index = "observed")
 gp_genus <- estimateRichness(gp_genus, assay.type = "rare3", name = "rich3", index = "observed")
@@ -241,7 +242,7 @@ gp_genus <- estimateRichness(gp_genus, assay.type = "rare3", name = "rich3", ind
 
 And plot the results:
 
-```{r, fig.width=10, fig.height=8, fig.cap="Richness estimates grouped and coloured by sample type. a) Raw data. b) subsampled counts, seed = 1. c) subsampled counts, seed = 2. d) subsampled counts, seed = 3."}
+```{r, fig.width=10, fig.height=8, fig.cap="Richness estimates grouped and coloured by sample type. a) Raw data. b) subsampled counts, seed = 1. c) subsampled counts, seed = 2. d) subsampled counts, seed = 3.", class.source = "fold-show"}
 p_r1 <- plotColData(object = gp_genus, 
     y = "rich1", x = "SampleType", 
     colour_by = "SampleType") + 
@@ -266,11 +267,11 @@ library(patchwork)
     plot_layout(guides = "collect") + plot_annotation(tag_levels = "a")
 ```
 
-The main difference in these panels are the range of the y-axis: it reaches higher values in **a** rather than **b**, **c**, and **d**. Moreover, while the richest samples belonged to Freshwater (creek) when the richness was evaluated using raw counts (panel **a**), Sediment (estuary) samples became the richest when the subsampled counts were used instead (**b**, **c**, and **d** panels). This is probably due to the differential presence of rare taxa between the two environments. Minor differences are observable when comparing **b**, **c**, and **d** panels, but still they are present.
+The main difference in these panels are the range of the y-axis: it reaches higher values in **a** rather than **b**, **c**, and **d**. Moreover, while the richest samples belonged to Freshwater (creek) when the richness was evaluated using raw counts (panel **a**), Sediment (estuary) samples became the richest when the subsampled counts were used instead (**b**, **c**, and **d** panels). This is probably due to the differential presence of rare taxa between the two environments. Minor differences are observable when comparing **b**, **c**, and **d** panels, but still, they are present.
 
 Practically, rarefaction consists in averaging the index measures of panels **b**, **c**, and **d** to obtain a single value for each sample.
 
-```{r, fig.cap="Richness estimates grouped and coloured by sample type. Richness indexes were averaged across the 3 subsamplings to obtain a single value for each sample."}
+```{r, fig.cap="Richness estimates grouped and coloured by sample type. Richness indexes were averaged across the 3 subsamplings to obtain a single value for each sample.", class.source = "fold-show"}
 gp_genus$rich_rarefaction <- rowMeans(
     as.data.frame(colData(gp_genus)[, 
         c("rich1", "rich2", "rich3")]))
@@ -286,7 +287,7 @@ p_rarefaction
 
 To automatise the entire procedure the following function can be used:
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, class.source = "fold-show"}
 library(BiocParallel)
 
 rarefaction_richness <- function(
@@ -329,7 +330,7 @@ rarefaction_richness <- function(
 
 We run it in parallel (Linux or MacOS, Windows users should use `BPPARAM = SerialParam()`) and we directly store the computed values inside the `TreeSummarizedExperiment` object.
 
-```{r}
+```{r, class.source = "fold-show"}
 gp_genus$rarefaction_richness <- rarefaction_richness(
     tse = gp_genus, 
     assay.type = "counts", 
@@ -341,7 +342,7 @@ gp_genus$rarefaction_richness <- rarefaction_richness(
 
 Finally, the graphical representation of rarefied richness (seed = 123, number of subsamplings = 100, $N_{L,min} = 58688$) is reported below.
 
-```{r, fig.cap="Richness estimates grouped and coloured by sample type. Richness indexes were averaged across 100 subsamplings (rarefaction library size = 58688) to obtain a single value for each sample (seed = 123)."}
+```{r, fig.cap="Richness estimates grouped and coloured by sample type. Richness indexes were averaged across 100 subsamplings (rarefaction library size = 58688) to obtain a single value for each sample (seed = 123).", class.source = "fold-show"}
 p_rarefaction100 <- plotColData(object = gp_genus, 
     y = "rarefaction_richness", x = "SampleType", 
     colour_by = "SampleType") + 
@@ -356,7 +357,7 @@ p_rarefaction100
 
 One of the most informative application that involves rarefaction and microbial richness is the creation of rarefaction curves:
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, class.source = "fold-show"}
 # devtools::install_github("gauravsk/ranacapa")
 library(ranacapa)
 set.seed(123)
@@ -365,7 +366,7 @@ rarefaction_curves <- ggrare(
     step = 10000, plot = FALSE, parallel = TRUE)
 ```
 
-```{r, fig.cap="Rarefaction curves."}
+```{r, fig.cap="Rarefaction curves.", class.source = "fold-show"}
 library(ggplot2)
 # https://rdrr.io/github/LTLA/scater/src/R/plot_colours.R
 total_colors <- scater:::.get_palette("tableau10medium")[1:9]
@@ -398,7 +399,7 @@ Similarly to what we did for microbial richness, we can also study the effect of
 
 Here we start by computing the Bray-Curtis indexes on raw counts, relative abundances (Total Sum Scaling normalization), and some subsamplings (the same used earlier for richness). Then use Multi Dimensional Scaling unsupervised ordination method is used to visualize the results.
 
-```{r, warning=FALSE, message=FALSE, fig.width=10, fig.height=7}
+```{r, warning=FALSE, message=FALSE, fig.width=10, fig.height=7, class.source = "fold-show"}
 gp_genus <- transformCounts(gp_genus, 
     assay.type = "counts", method = "relabundance")
 
@@ -437,7 +438,6 @@ p_bc_raw <- plotReducedDim(gp_genus, "PCoA_BC_raw",
     labs(title = "Raw counts, Bray-Curtis, PCoA")
 p_bc_tss <- plotReducedDim(gp_genus, "PCoA_BC_TSS", 
     colour_by = "SampleType") + 
-    scale_y_reverse()  + 
     labs(title = "TSS, Bray-Curtis, PCoA")
 p_bc_r1 <- plotReducedDim(gp_genus, "PCoA_BC1", 
     colour_by = "SampleType")  + 
@@ -448,7 +448,8 @@ p_bc_r2 <- plotReducedDim(gp_genus, "PCoA_BC2",
     labs(title = "Subsampled seed = 2, Bray-Curtis, PCoA",
          subtitle = paste("N(L,min) =", min(gp_genus$sum)))
 p_bc_r3 <- plotReducedDim(gp_genus, "PCoA_BC3", 
-    colour_by = "SampleType") + 
+    colour_by = "SampleType") +
+    scale_y_reverse()  + 
     labs(title = "Subsampled seed = 3, Bray-Curtis, PCoA",
          subtitle = paste("N(L,min) =", min(gp_genus$sum)))
 
@@ -470,7 +471,7 @@ where $i$ is the number of taxa and $j,k$ are the sample indexes. By constructio
 
 Practically, rarefaction consists in averaging the index measures of panels **b**, **c**, and **d** to obtain a single value for each sample.
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, class.source = "fold-show"}
 # Recompute the distances
 bc1 <- vegan::vegdist(x = t(assay(gp_genus, "rare1")), 
     method = "bray")
@@ -487,7 +488,7 @@ bc_rarefaction <- (bc1 + bc2 + bc3) / 3
 reducedDim(gp_genus, "PCoA_BCrarefaction") <- cmdscale(d = bc_rarefaction, k = 2, eig = TRUE)$points
 ```
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, class.source = "fold-show"}
 plotReducedDim(gp_genus, "PCoA_BCrarefaction", 
     colour_by = "SampleType") + 
     labs(title = "Rarefaction Bray-Curtis, PCoA",
@@ -496,7 +497,7 @@ plotReducedDim(gp_genus, "PCoA_BCrarefaction",
 
 As we did for the richness index, the process can be automatised:
 
-```{r}
+```{r, class.source = "fold-show"}
 rarefaction_BC_PCoA <- function(
     tse, # The object to use
     assay.type = "counts", # Assay to use
@@ -538,7 +539,7 @@ rarefaction_BC_PCoA <- function(
 
 We run it in parallel (Linux or MacOS, Windows users should use `BPPARAM = SerialParam()`) and we directly store the computed values inside the `TreeSummarizedExperiment` object in the `reducedDim` slot.
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, class.source = "fold-show"}
 reducedDim(gp_genus, "PCoA_BCrarefaction100") <- 
     rarefaction_BC_PCoA(
         tse = gp_genus, 
@@ -551,7 +552,7 @@ reducedDim(gp_genus, "PCoA_BCrarefaction100") <-
 
 Finally, the graphical representation of rarefied beta-diversity using Bray-Curtis dissimilarity index and PCoA ordination (seed = 123, number of subsamplings = 100, $N_{L,min} = 58688$) is reported below.
 
-```{r}
+```{r, message=FALSE, warning=FALSE, class.source = "fold-show"}
 plotReducedDim(gp_genus, "PCoA_BCrarefaction100", 
     colour_by = "SampleType") + 
     labs(title = "Rarefaction Bray-Curtis, PCoA",
@@ -569,6 +570,96 @@ But this can also occur when:
 
 However, in cases where there are substantial differences in sequencing depth or if the samples have highly variable distributions of taxa, rarefaction and TSS normalization might lead to different results. In such situations, researchers should carefully consider which normalization approach is more appropriate for their specific dataset and research objectives.
 
-*Presented at the [DataScience Group meeting](https://github.com/quadram-institute-bioscience/datasciencegroup/#readme), [Quadram Institute Bioscience](https://quadram.ac.uk/), July 2023*
+## A case study
 
-## References
+Describe the dataset and the aim of this section.
+
+### Read the raw data
+
+```{r}
+# Read dada2 stats file
+quality_stats <- read.delim("./data/01_rarefaction/dada2_stats.tsv", header = TRUE, sep = "\t")
+# Add rownames
+rownames(quality_stats) <- gsub(pattern = "_R1.fastq.gz", replacement = "", x = quality_stats[,"X"])
+# Remove the first column
+quality_stats <- quality_stats[, -1]
+
+head(quality_stats)
+```
+
+```{r}
+# Read metadata
+metadata <- read.delim("./data/01_rarefaction/metadata.tsv", header = TRUE, sep = "\t", row.names = 1)
+
+head(metadata)
+```
+
+```{r}
+# Read taxonomy
+taxonomy <- read.delim("./data/01_rarefaction/taxonomy.txt", header = TRUE, sep = " ")
+rownames(taxonomy) <- paste0("ASV", seq_len(nrow(taxonomy)))
+head(taxonomy)
+```
+
+```{r}
+# Read feature table
+feature_table <- read.delim("./data/01_rarefaction/feature-table.tsv", header = TRUE, sep = "\t", row.names = 1)
+head(feature_table)
+```
+
+```{r}
+# Read tree file
+library(ape)
+tree <- ape::read.tree(file = "./data/01_rarefaction/rep-seqs.tree")
+str(tree)
+```
+
+### Assembling the `TreeSummarizedExperiment` object
+
+```{r}
+tse <- TreeSummarizedExperiment(
+    assays = list("counts" = feature_table),
+    rowData = taxonomy, 
+    colData = merge(metadata, quality_stats, by = 0),
+    rowTree = tree)
+tse
+```
+
+### Compute quality metrics
+
+For both the `colData` (*i.e.*, sample metadata) and `rowData` (*i.e.*, taxa metadata) slots of the experiment object we calculate some simple metrics. For the samples, the library size (`sum`) and the number of detected features (`detected`) are computed:
+
+```{r, message=FALSE}
+tse <- scater::addPerFeatureQC(tse)
+tse <- scater::addPerCellQC(tse)
+
+head(colData(tse)[, c("sum", "detected")])
+```
+
+For the taxa, their average count value (`mean`) and the percentage of samples with that feature (`detected`) are reported:
+
+```{r}
+head(rowData(tse)[, c("mean", "detected")])
+```
+
+### Filter or not to filter, this is the question
+
+When we loaded the raw data, we may have noticed that many taxa were not classified, even at the kingdom and phylum level. In particular we have 20 ASVs which are not classified at the Kingdom level and 30 (the previous 20 plus other 10) at the Phylum level.
+
+```{r}
+table(rowData(tse)$Kingdom, useNA = "always")
+table(rowData(tse)$Phylum, useNA = "always")
+```
+
+Whether or not to remove unclassified features at the phylum level prior to every analysis in microbiome data depends on the specific goals and requirements of the analysis.
+
+The presence of unclassified features may be due to various reasons, such as limited reference databases or low sequencing depth. On one hand, removing these unclassified features could improve data quality and reduce potential noise in your analysis. On the other hand, The decision to remove unclassified features may affect the outcome of the analysis. If the unclassified features are prevalent and significant in your dataset, removing them could lead to a loss of valuable information. Nevertheless, if they are rare or not biologically relevant, removing them might have minimal impact.
+
+```{r}
+unclassified <- which(is.na(rowData(tse)$Phylum))
+rowData(tse)[unclassified, c("mean", "detected")]
+```
+
+In our case we can see that some of the unclassified features are in the top abundant positions. These are hardly related to rare features as they are present with high mean abundances in more than 90% of the samples.
+
+Whatever the choice, if you plan to share your data or replicate the analysis in the future, it's essential to document clearly whether unclassified features were removed and the reasoning behind the decision.

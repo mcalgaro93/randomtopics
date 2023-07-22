@@ -9,9 +9,14 @@ fig:unnamed-chunk-18-2
 about-this-book
 rarefaction-practice-in-microbiome-data-analysis
 aims-of-this-chapter
+required-packages
 introduction-and-definitions
 rarefaction-in-practice
 richness-index
 rarefaction-curves
 bray-curtis-dissimilarity-index
-references
+a-case-study
+read-the-raw-data
+assembling-the-treesummarizedexperiment-object
+compute-quality-metrics
+filter-or-not-to-filter-this-is-the-question

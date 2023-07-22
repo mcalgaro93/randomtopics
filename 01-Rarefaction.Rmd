@@ -3,6 +3,9 @@ output: html_document
 bibliography: references.bib
 csl: bioinformatics.csl
 link-citations: yes
+author: 
+  - Matteo Calgaro^[University of Verona, Verona, Italy, matteo.calgaro_01@univr.it]
+  - Andrea Telatin^[Quadram Institute Bioscience, Norwich, UK, andrea.telatin@quadram.ac.uk]
 ---
 
 # Rarefaction Practice in Microbiome Data Analysis
@@ -64,12 +67,8 @@ colSums(count_matrix)
 According to the definition, we choose $N_{L,min} = 300$ and we subsample, without replacement (random number generation seed equal to 123, see [why](https://www.tutorialspoint.com/why-we-should-use-set-seed-in-r)), the counts such that they all the samples have size $300$.
 
 ```{r}
-# Set the random seed for reproducibility 
-set.seed(123)
-
 # Function to rarefy counts of a count matrix
 rarefy_function <- function(count_matrix) {
-  set.seed(123)
   
   # Determine the minimum library size across samples
   minLibSize <- min(colSums(count_matrix))
@@ -90,6 +89,9 @@ rarefy_function <- function(count_matrix) {
   return(count_rarefy)
 }
 
+# Set the random seed for reproducibility 
+set.seed(123)
+
 rarefied_counts <- rarefy_function(count_matrix)
 rarefied_counts
 ```
@@ -100,7 +102,6 @@ As the subsampling step is performed only once, another way to obtain the rarefi
 
 ```{r}
 rarefy_simple_function <- function(count_matrix) {
-  set.seed(123)
   
   # Determine the minimum library size across samples
   minLibSize <- min(colSums(count_matrix))

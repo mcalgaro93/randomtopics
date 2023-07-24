@@ -31,6 +31,7 @@ List of libraries used:
 -   [patchwork](https://patchwork.data-imaginist.com/) (`install.packages('patchwork')`)
 -   [ranacapa](https://github.com/gauravsk/ranacapa) (`devtools::install_github("gauravsk/ranacapa")`)
 -   [BiocParallel](https://bioconductor.org/packages/release/bioc/html/BiocParallel.html) (`BiocManager::install("BiocParallel")`)
+-   [TreeSummarizedExperiment](https://bioconductor.org/packages/release/bioc/html/TreeSummarizedExperiment.html) (`BiocManager::install("TreeSummarizedExperiment")`)
 
 To install `ranacapa` you will need `devtools` (package) and `phyloseq` from bioconductor.
 
@@ -211,7 +212,10 @@ plotColData(object = gp_genus,
          title = "Richness vs Library Size")
 ```
 
-But all of the above plots are generated from raw data. Here we want to inspect the effect of rarefaction. For this reason we use the [`subsampleCounts`](https://rdrr.io/github/FelixErnst/mia/man/subsampleCounts.html) function of the package `mia` to obtain subsampled counts. We repeat this process 3 times with 3 different seeds (1, 2, and 3). We store the results in three differentially named assays of the `TreeSummarizedExperiment` object: *rare1*, *rare2*, and *rare3*.
+But all of the above plots are generated from raw data. Here we want to inspect the effect of rarefaction. 
+For this reason we use the [`subsampleCounts`](https://rdrr.io/github/FelixErnst/mia/man/subsampleCounts.html) function of the package `mia` to obtain subsampled counts. 
+We repeat this process 3 times with 3 different seeds (1, 2, and 3). 
+We store the results in three differentially named assays of the `TreeSummarizedExperiment` object: *rare1*, *rare2*, and *rare3*.
 
 ```{r, warning=FALSE, message=FALSE, class.source = "fold-show"}
 gp_genus <- mia::subsampleCounts(gp_genus, 
@@ -333,6 +337,8 @@ rarefaction_richness <- function(
 We run it in parallel (Linux or MacOS, Windows users should use `BPPARAM = SerialParam()`) and we directly store the computed values inside the `TreeSummarizedExperiment` object.
 
 ```{r, class.source = "fold-show"}
+
+library("TreeSummarizedExperiment")
 gp_genus$rarefaction_richness <- rarefaction_richness(
     tse = gp_genus, 
     assay.type = "counts", 
@@ -591,7 +597,13 @@ longitudinal study of gut microbiome stabilization in mice post-weaning.
 
 The files analised here are available in the 
 [Github repository](https://github.com/mcalgaro93/randomtopics/tree/main/data/01_rarefaction)
-of this chapter.
+of this chapter:
+
+- dada2_stats.tsv: a summary of the performance of DADA2 denoising
+- feature-table.tsv: raw counts per feature (ASVs) per sample
+- metadata.tsv: properties of each sample
+- rep-seqs.tree: phylogenetic tree of the ASVs
+- taxonomy.txt: table with the taxonomic classification of each ASV
 
 For the purpose of this chapter, we will not delve into the specific details on
 the reads to counts procedure, which will be discussed elsewhere soon.
@@ -630,7 +642,7 @@ metadata <- read.delim("./data/01_rarefaction/metadata.tsv", header = TRUE, sep 
 head(metadata)
 ```
 
-An algorithm has been used to assign the taxonomy to the identified representative sequences.
+An algorithm has been used to assign the **taxonomy** to the identified representative sequences.
 The taxonomy table is called `taxonomy.tsv`.
 
 ```{r}
@@ -640,7 +652,7 @@ rownames(taxonomy) <- paste0("ASV", seq_len(nrow(taxonomy)))
 head(taxonomy)
 ```
 
-Finally, the central piece of information is the feature table (historically called "OTU Table"):
+Finally, the central piece of information is the **feature table** (historically called "OTU Table"):
 
 ```{r}
 # Read feature table
@@ -649,7 +661,7 @@ head(feature_table)
 ```
 
 Sometimes it's useful to know how related are the representative sequences, and this is usually
-done producing a multiple alignment from which a phylogenetic tree can be constructed. 
+done producing a multiple alignment from which a **phylogenetic tree** can be constructed. 
 
 An example of use of phylogenetic information is the computation of [UniFrac](https://en.wikipedia.org/wiki/UniFrac) distance.
 
@@ -712,11 +724,13 @@ In our case we can see that some of the unclassified features are in the top abu
 
 Whatever the choice, if you plan to share your data or replicate the analysis in the future, it's essential to document clearly whether unclassified features were removed and the reasoning behind the decision.
 
-### Try again
+### Try again?
 
 A closer inspection of the data raised an issue: multiple features (ASVs) had no taxonomy attached.
+
 We noticed that high abundance and high prevalence features were not immune from the issue. 
 If we can be sure that our taxonomy assignment was flawless, we might conclude we are observing new sequences, and it would be advisable to
 perform the analysis at the feature level, ignoring taxonomic lables when possible.
 
-An alternative is to check our methods, and redo the taxonomy classification. Try loading `taxonomy-dada.tsv` and you will now see a different story...
+An alternative is to check our methods, and redo the taxonomy classification. 
+Try loading `taxonomy-dada.txt` and you will now see a different story...

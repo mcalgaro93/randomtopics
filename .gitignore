@@ -3,3 +3,6 @@
 .Rproj.user
 *.Rproj
 _bookdown_files/
+Untitled.Rmd
+.DS_Store
+libz.R

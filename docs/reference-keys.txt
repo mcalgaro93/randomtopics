@@ -15,8 +15,9 @@ rarefaction-in-practice
 richness-index
 rarefaction-curves
 bray-curtis-dissimilarity-index
-a-case-study
+exercise-loading-real-datasets
 read-the-raw-data
 assembling-the-treesummarizedexperiment-object
 compute-quality-metrics
 filter-or-not-to-filter-this-is-the-question
+try-again
